@@ -18,30 +18,36 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<meta name="generator" content={Astro.generator} />
+<meta name="generator" content="Astro" />
+<meta name="theme-color" content="#000000" />
 
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link rel="preload" href="/fonts/atkinson-regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/atkinson-bold.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href="https://luisiitodev.com/{canonicalURL}" />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
+<meta name="title" content="{title}" />
+<meta name="description" content="Luis Alberto Sandoval Monestel, conocido como LuisiitoDev, es un desarrollador de software en Cartago, Costa Rica. Conocido por su trabajo en .NET MAUI, Xamarin y ReactJS." />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:url" content="https://luisiitodev.com/{Astro.url}" />
+<meta property="og:title" content="{title}" />
+<meta property="og:description" content="{description}" />
+<meta property="og:image" content="https://luisiitodev.com/{new URL(image, Astro.url)}" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:site_name" content="LuisiitoDev" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:url" content="https://luisiitodev.com/{Astro.url}" />
+<meta property="twitter:title" content="{title}" />
+<meta property="twitter:description" content="{description}" />
+<meta property="twitter:image" content="https://luisiitodev.com/{new URL(image, Astro.url)}" />
+<meta property="twitter:creator" content="@LuisiitoDev" />
+
+
