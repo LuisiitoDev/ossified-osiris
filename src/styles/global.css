@@ -50,10 +50,9 @@ body {
 }
 
 main {
-	width: 960px;
-	max-width: calc(100% - 2rem);
-	margin: auto;
-	padding: 3rem 1rem;
+	width: 100%;
+	max-width: 100%;
+	margin: 0 auto;
 }
 
 h1,
@@ -271,9 +270,6 @@ html.dark .glass-card {
 @media (max-width: 720px) {
 	body {
 		font-size: 16px;
-	}
-	main {
-		padding: 1.5rem 1rem;
 	}
 	h1 { font-size: 2.2rem; }
 	h2 { font-size: 1.75rem; }

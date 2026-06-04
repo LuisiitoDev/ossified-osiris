@@ -323,7 +323,8 @@
 									await navigator.share({
 										files: [file],
 										title: 'Luis Sandoval Profile Story',
-										text: `Check out my profile: ${currentUrl}`
+										text: 'Check out my profile!',
+										url: currentUrl
 									});
 									return; // Successful mobile native share, stop executing modal open
 								}
