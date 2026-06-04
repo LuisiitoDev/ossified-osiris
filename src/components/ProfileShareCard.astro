@@ -308,30 +308,39 @@
 			});
 		};
 
+		let pregeneratedFile = null;
+
+		// Start pre-generating the PNG card immediately on load to bypass Safari's user gesture check
+		const pregenerateCardFile = async () => {
+			try {
+				const canvas = await generateCanvas();
+				if (canvas) {
+					canvas.toBlob((blob) => {
+						if (blob) {
+							pregeneratedFile = new File([blob], 'luis-sandoval-profile.png', { type: 'image/png' });
+						}
+					}, 'image/png');
+				}
+			} catch (e) {
+				console.warn('Card pre-generation failed', e);
+			}
+		};
+		
+		pregenerateCardFile();
+
 		// Open Modal Action
 		openBtn.addEventListener('click', async () => {
 			// Web Share API with files check (Native Story/Image sharing on mobile devices!)
-			// We generate the image first, check if Web Share handles files, and share it directly!
-			if (navigator.share && navigator.canShare) {
+			// We share synchronously using the pregenerated file to satisfy Safari's user gesture requirement
+			if (navigator.share && navigator.canShare && pregeneratedFile) {
 				try {
-					const canvas = await generateCanvas();
-					if (canvas) {
-						canvas.toBlob(async (blob) => {
-							if (blob) {
-								const file = new File([blob], 'luis-sandoval-profile.png', { type: 'image/png' });
-								if (navigator.canShare({ files: [file] })) {
-									await navigator.share({
-										files: [file],
-										title: 'Luis Sandoval Profile Story',
-										text: 'Check out my profile!',
-										url: currentUrl
-									});
-									return; // Successful mobile native share, stop executing modal open
-								}
-							}
-						}, 'image/png');
-						// If blob creation is asynchronous, let's also support opening modal as a clean backup
-					}
+					await navigator.share({
+						files: [pregeneratedFile],
+						title: 'Luis Sandoval Profile Story',
+						text: 'Check out my profile!',
+						url: currentUrl
+					});
+					return; // Successful mobile native share, stop executing modal open
 				} catch (err) {
 					console.warn('Web Share failed, falling back to modal preview', err);
 				}
