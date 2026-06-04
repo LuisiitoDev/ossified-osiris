@@ -3,80 +3,140 @@ import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<!-- <HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink> -->
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
-		<div class="social-links">
-			<a href="https://www.linkedin.com/in/luisiitodev/" target="_blank">
-				<span class="sr-only">Let's connect on Linkedln</span>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
-					<path fill="currentColor" d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.58c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.59c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.69h-3.56V9h3.42v1.56h.05c.48-.91 1.64-1.85 3.37-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29z"/>
+<header class="sticky top-0 z-50 transition-colors duration-300">
+	<nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+		<h2 class="text-xl font-bold tracking-tight">
+			<a href="/" class="brand-link bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+				{SITE_TITLE}
+			</a>
+		</h2>
+		
+		<div class="flex items-center gap-6">
+			<div class="internal-links flex items-center gap-1 sm:gap-2">
+				<HeaderLink href="/">Home</HeaderLink>
+				<HeaderLink href="/about">About</HeaderLink>
+			</div>
+
+			<div class="social-links hidden items-center gap-2 md:flex">
+				<a href="https://www.linkedin.com/in/luisiitodev/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+						<path d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.58c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.59c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.69h-3.56V9h3.42v1.56h.05c.48-.91 1.64-1.85 3.37-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29z"/>
+					</svg>
+				</a>
+				<a href="https://x.com/luisiitodev" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="X (formerly Twitter)">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+					</svg>
+				</a>
+				<a href="https://github.com/LuisiitoDev" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="GitHub">
+					<svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
+						<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+					</svg>
+				</a>
+			</div>
+
+			<div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-800"></div>
+
+			<!-- Theme Toggle Button -->
+			<button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+				<!-- Moon icon for light mode (turns on dark mode) -->
+				<svg class="moon-icon block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
 				</svg>
-			</a>
-			<a href="https://x.com/luisiitodev" target="_blank">
-				<span class="sr-only">Follow me on Twitter</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"
-					></path></svg
-				>
-			</a>
-			<a href="https://github.com/LuisiitoDev" target="_blank">
-				<span class="sr-only">Follow me on Github</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-					></path></svg
-				>
-			</a>
+				<!-- Sun icon for dark mode (turns on light mode) -->
+				<svg class="sun-icon hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 0A9 9 0 115.636 5.636 9 9 0 0117.657 5.636z" />
+				</svg>
+			</button>
 		</div>
 	</nav>
 </header>
+
+<script>
+	const initThemeToggle = () => {
+		const themeToggleBtn = document.getElementById('theme-toggle');
+		if (themeToggleBtn) {
+			// Remove existing listeners if any
+			const newBtn = themeToggleBtn.cloneNode(true);
+			themeToggleBtn.parentNode?.replaceChild(newBtn, themeToggleBtn);
+			
+			newBtn.addEventListener('click', () => {
+				const element = document.documentElement;
+				const isDark = element.classList.toggle('dark');
+				localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			});
+		}
+	};
+
+	// Initialize on page load
+	initThemeToggle();
+	
+	// Support Astro view transitions / document load variants
+	document.addEventListener('astro:after-swap', initThemeToggle);
+</script>
+
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		background: rgba(255, 255, 255, 0.75);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border-bottom: 1px solid rgba(241, 245, 249, 0.6);
 	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
+	
+	html.dark header {
+		background: rgba(15, 23, 42, 0.7);
+		border-bottom: 1px solid rgba(30, 41, 59, 0.5);
 	}
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+	.brand-link {
+		font-family: var(--font-title);
+		font-size: 1.45rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		transition: all 0.3s ease;
 	}
-	nav {
+
+	.brand-link:hover {
+		transform: scale(1.02);
+		filter: brightness(1.1);
+	}
+
+	.social-icon-btn {
+		color: rgb(var(--gray));
+		padding: 0.5rem;
+		border-radius: 8px;
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.social-icon-btn:hover {
+		color: rgb(var(--accent));
+		background: rgba(var(--accent), 0.08);
+		transform: translateY(-2px);
+	}
+
+	.theme-toggle-btn {
+		background: none;
+		border: none;
+		padding: 0.5rem;
+		border-radius: 8px;
+		cursor: pointer;
+		color: rgb(var(--gray-dark));
+		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
+		width: 38px;
+		height: 38px;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
-		text-decoration: none;
+
+	.theme-toggle-btn:hover {
+		background: rgba(var(--accent), 0.08);
+		color: rgb(var(--accent));
+		transform: rotate(15deg) scale(1.05);
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
-		display: flex;
-	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
+
+	.theme-toggle-btn svg {
+		width: 22px;
+		height: 22px;
 	}
 </style>

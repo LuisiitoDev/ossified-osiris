@@ -1,47 +1,337 @@
 ---
 import Layout from '../layouts/BlogPost.astro';
+import ProfileShareCard from '../components/ProfileShareCard.astro';
 ---
 
 <Layout
-	title="Software Engineer"
-	description="Lorem ipsum dolor sit amet"
+	title="About Me"
+	description="Luis Sandoval - Software Engineer from Cartago, Costa Rica"
 	pubDate={new Date('December 05 2024')}
-	heroImage="/blog-placeholder-about.jpg"
 >
-	<p class="mt-4 text-lg leading-relaxed text-gray-700">
-		👋 Hello there! I'm Luis Sandoval, a passionate software developer hailing from Cartago, Costa Rica. My journey in the world of coding has been an exciting one, driven by a relentless curiosity to learn and evolve every day. I proudly identify as a self-taught individual and a lifelong learner, which is precisely what drew me to this dynamic career. In a realm where technology evolves by the minute and every second counts, I find myself invigorated by the perpetual learning process.
-	</p>
-	<h2 class="text-2xl font-bold mt-6">Experience</h2>
-	<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-	  <li>Gestión en Tecnología e Información GTI - San José, Costa Rica
-		<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-		  <li>Senior Software Developer (May. 2022 - Present)</li>
-		  <li>Mid Software Developer (Feb. 2021 - May. 2022)</li>
-		  <li>Junior Software Developer (Dic. 2018 - Feb. 2021)</li>
-		  <li>Software Developer Internship (Sept. 2018 - Dic. 2018)</li>
-		</ul>
-	  </li>
-	  <li>Fiserv - Cartago, Costa Rica
-		<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-		  <li>Software Development Engineer (Nov. 2020 - Feb 2021)</li>
-		</ul>
-	  </li>
-	</ul>
-	<h2 class="text-2xl font-bold mt-6">Skills</h2>
-	<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-	  <li>C#, .NET Core, .NET Framework, Blazor, .NET Mvc </li>
-	  <li>React js</li>
-	  <li>Xamarin Forms / MAUI</li>
-	  <li>SQL Server</li>
-	  <li>Cloud with Azure (App Services, Functions, SignalR, etc)</li>
-	  <li>Apis</li>
-	  <li>GitHub, GIT, TFS, Bitbucket</li>
-	  <li>Devops, CI/CD</li>
-	</ul>
-	<h2 class="text-2xl font-bold mt-6">Certifications</h2>
-	<ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-	  <li class="li-p">Microsoft: Azure Developer Associate <a href='https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/88BA7F0EF27D4087?sharingId=4112CC77E15438D0' class="text-blue-500 underline">(Check it here!)</a></li>
-	  <li class="li-p">Microsoft: Azure AI Fundamentals <a href='https://www.credly.com/badges/ab6af0d2-9756-425c-b6fc-2589d9a0240f' class="text-blue-500 underline">(Check it here!)</a></li>
-	  <li class="li-p">Microsoft: Azure Fundamentals <a href='https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/6E18A2881646833A?sharingId=4112CC77E15438D0' class="text-blue-500 underline">(Check it here!)</a></li>
-	</ul>
+	<!-- Centered Circle Profile Photo -->
+	<div class="flex flex-col items-center justify-center mb-4 -mt-4">
+		<div class="w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-md border border-slate-200/30 dark:border-slate-800/30">
+			<img 
+				src="/luis-sandoval.png" 
+				alt="Luis Sandoval" 
+				style="width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 9999px !important; margin: 0 !important; max-width: none !important;"
+				class="select-none"
+			/>
+		</div>
+	</div>
+
+	<!-- Interactive Profile Share Card Modal -->
+	<ProfileShareCard />
+
+	<!-- Introduction Section -->
+	<div class="intro-section mb-10 text-slate-700 dark:text-slate-300">
+		<p class="text-lg leading-relaxed font-normal">
+			👋 Hi! I'm <strong>Luis Sandoval</strong>, a Software Engineer from Cartago, Costa Rica. I'm a self-taught developer and a lifelong learner. I enjoy building software, solving technical challenges, and learning new technologies every day. I created this blog to share my journey, notes, and experiences as a developer.
+		</p>
+	</div>
+
+	<!-- Experience Section -->
+	<div class="experience-section mb-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 013.75 18.4V14.15m16.5 0c0-1.24-.75-2.317-1.874-2.775m1.874 2.775V8.25c0-.621-.504-1.125-1.125-1.125H16.5m-12.75 8c0-1.24.75-2.317 1.874-2.775m-1.874 2.775V8.25c0-.621.504-1.125 1.125-1.125H7.5m9 0V5.25c0-.621-.504-1.125-1.125-1.125H8.625c-.621 0-1.125.504-1.125 1.125v3M12 9v3m0 0H9.75M12 12h2.25" />
+			</svg>
+			Professional Experience
+		</h2>
+		
+		<div class="space-y-8 relative before:absolute before:inset-y-1 before:left-3.5 before:w-[2px] before:bg-slate-200 dark:before:bg-slate-800">
+			<!-- Experience Item 1 -->
+			<div class="relative pl-10 group">
+				<div class="absolute left-1.5 top-1.5 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-4 border-indigo-500 group-hover:scale-110 transition-transform duration-200"></div>
+				<div class="bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-800/40 rounded-xl p-5 hover:border-indigo-500/20 transition-all duration-200">
+					<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+						<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 m-0">Gestión en Tecnología e Información GTI</h3>
+						<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">San José, Costa Rica</span>
+					</div>
+					
+					<div class="space-y-3.5 mt-4">
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/20 pl-3">
+							<div>
+								<h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">Senior Software Engineer</h4>
+								<span class="text-xs text-slate-400">May. 2022 - Present</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Mid Software Engineer</h4>
+								<span class="text-xs text-slate-400">Feb. 2021 - May. 2022</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm font-medium text-slate-600 dark:text-slate-400 m-0">Junior Software Engineer</h4>
+								<span class="text-xs text-slate-400">Dec. 2018 - Feb. 2021</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm text-slate-600 dark:text-slate-400 m-0">Software Engineer Internship</h4>
+								<span class="text-xs text-slate-400">Sept. 2018 - Dec. 2018</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Experience Item 2 -->
+			<div class="relative pl-10 group">
+				<div class="absolute left-1.5 top-1.5 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-4 border-purple-500 group-hover:scale-110 transition-transform duration-200"></div>
+				<div class="bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-800/40 rounded-xl p-5 hover:border-purple-500/20 transition-all duration-200">
+					<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+						<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 m-0">Fiserv</h3>
+						<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">Cartago, Costa Rica</span>
+					</div>
+					<div class="mt-4 border-l-2 border-purple-500/20 pl-3">
+						<h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200 m-0">Software Development Engineer</h4>
+						<span class="text-xs text-slate-400">Nov. 2020 - Feb. 2021</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Skills Section -->
+	<div class="skills-section mb-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.982-11.825H18l1 6.175L10.018 3H9l-1 6.175h-.018z" />
+			</svg>
+			Skills & Technologies
+		</h2>
+		
+		<div class="flex flex-wrap gap-2.5">
+			{[
+				'C#', '.NET', '.NET MAUI', 'Python', 'Azure', 'AI & Azure OpenAI', 
+				'Model Context Protocol (MCP)', 'SQL Server & Database DevOps', 
+				'DevOps & CI/CD', 'Clean Architecture & SOLID'
+			].map((skill) => (
+				<span class="px-3.5 py-1.5 rounded-xl font-medium text-xs sm:text-sm bg-indigo-50 dark:bg-slate-800/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100/50 dark:border-slate-700/50 hover:bg-indigo-100/40 dark:hover:bg-slate-700/60 transition-all duration-200 hover:-translate-y-0.5 select-none cursor-default shadow-sm shadow-indigo-100/5 dark:shadow-none">
+					{skill}
+				</span>
+			))}
+		</div>
+	</div>
+
+	<!-- Certifications Section -->
+	<div class="certifications-section mb-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0110 21a3.745 3.745 0 01-3.296-1.593 3.746 3.746 0 01-3.296-3.296A3.746 3.746 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0114 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 3.296A3.746 3.746 0 0121 12z" />
+			</svg>
+			Official Certifications
+		</h2>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			{[
+				{
+					title: 'Azure Developer Associate',
+					issuer: 'Microsoft',
+					url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/88BA7F0EF27D4087?sharingId=4112CC77E15438D0',
+					color: 'border-blue-500/20 text-blue-600 dark:text-blue-400 bg-blue-500/5',
+					badge: '/microsoft-certified-associate.png'
+				},
+				{
+					title: 'Azure AI Engineer Associate',
+					issuer: 'Microsoft',
+					url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/azure-ai-engineer?tab=credentials-tab',
+					color: 'border-violet-500/20 text-violet-600 dark:text-violet-400 bg-violet-500/5',
+					badge: '/microsoft-certified-associate.png'
+				},
+				{
+					title: 'SQL AI Developer Associate',
+					issuer: 'Microsoft',
+					url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/developing-ai-enabled-database-solutions?tab=credentials-tab',
+					color: 'border-amber-500/20 text-amber-600 dark:text-amber-400 bg-amber-500/5',
+					badge: '/microsoft-certified-associate.png'
+				},
+				{
+					title: 'Azure AI Fundamentals',
+					issuer: 'Microsoft',
+					url: 'https://www.credly.com/badges/ab6af0d2-9756-425c-b6fc-2589d9a0240f',
+					color: 'border-cyan-500/20 text-cyan-600 dark:text-cyan-400 bg-cyan-500/5',
+					badge: '/microsoft-certified-fundamentals.png'
+				},
+				{
+					title: 'Azure Fundamentals',
+					issuer: 'Microsoft',
+					url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/6E18A2881646833A?sharingId=4112CC77E15438D0',
+					color: 'border-indigo-500/20 text-indigo-600 dark:text-indigo-400 bg-indigo-500/5',
+					badge: '/microsoft-certified-fundamentals.png'
+				}
+			].map((cert) => (
+				<a 
+					href={cert.url} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class={`group flex items-center gap-5 p-5 rounded-xl border ${cert.color} hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none`}
+				>
+					<img 
+						src={cert.badge} 
+						alt={`${cert.title} Badge`} 
+						class="w-16 h-16 object-contain flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
+					/>
+					<div class="flex-1 flex flex-col justify-between">
+						<div>
+							<div class="flex items-center justify-between mb-1">
+								<span class="text-xs font-semibold uppercase tracking-wider opacity-75">{cert.issuer}</span>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+								</svg>
+							</div>
+							<h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors leading-snug">
+								{cert.title}
+							</h3>
+						</div>
+						<span class="text-xs underline font-medium mt-2.5 select-none opacity-80 group-hover:opacity-100">Verify Credential</span>
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<!-- GitHub Spotlight Section -->
+	<div class="github-section mb-6">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+			</svg>
+			Featured Open Source Projects
+		</h2>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			{[
+				{
+					name: 'DiscoverCostaRica',
+					desc: 'An API offering detailed geographical and cultural data about Costa Rica, including traditional dishes, beaches, national parks, and festivals.',
+					lang: 'C#',
+					url: 'https://github.com/LuisiitoDev/DiscoverCostaRica',
+					color: 'border-emerald-500/20 dark:border-emerald-800/20 hover:border-emerald-500'
+				},
+				{
+					name: 'DevOpsAssistant',
+					desc: 'A C# helper utility designed to automate, streamline, and inspect DevOps CI/CD pipeline runs and configurations.',
+					lang: 'C#',
+					url: 'https://github.com/LuisiitoDev/DevOpsAssistant',
+					color: 'border-indigo-500/20 dark:border-indigo-800/20 hover:border-indigo-500'
+				},
+				{
+					name: 'SQLDataBaseDevOps',
+					desc: 'A comprehensive repository showcasing automated database DevOps pipelines, migrations, and schema deployments for SQL Server.',
+					lang: 'TSQL / SQL',
+					url: 'https://github.com/LuisiitoDev/SQLDataBaseDevOps',
+					color: 'border-amber-500/20 dark:border-amber-800/20 hover:border-amber-500'
+				},
+				{
+					name: 'dotNetMCPServer',
+					desc: 'A Model Context Protocol (MCP) server implementation built in C#/.NET, allowing local tools and databases to integrate with LLMs.',
+					lang: 'C# / .NET',
+					url: 'https://github.com/LuisiitoDev/dotNetMCPServer',
+					color: 'border-violet-500/20 dark:border-violet-800/20 hover:border-violet-500'
+				}
+			].map((project) => (
+				<a 
+					href={project.url} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class={`group flex flex-col justify-between p-5 rounded-xl border ${project.color} bg-slate-50/40 dark:bg-slate-900/20 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none`}
+				>
+					<div>
+						<div class="flex items-center justify-between mb-2">
+							<span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{project.name}</span>
+							<svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" class="text-slate-400 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
+								<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+							</svg>
+						</div>
+						<p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 m-0 leading-relaxed">
+							{project.desc}
+						</p>
+					</div>
+					<div class="flex items-center gap-1.5 mt-4 text-xs font-semibold text-slate-400">
+						<span class="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-slate-600"></span>
+						<span>{project.lang}</span>
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<!-- Contact Information Section -->
+	<div class="contact-section mb-6 mt-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+			</svg>
+			Contact Information
+		</h2>
+		
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			<!-- LinkedIn -->
+			<a 
+				href="https://www.linkedin.com/in/luisiitodev/" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-5 p-5 rounded-xl border border-blue-500/20 dark:border-blue-800/20 bg-blue-500/5 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+						<path d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.58c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.59c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.69h-3.56V9h3.42v1.56h.05c.48-.91 1.64-1.85 3.37-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-blue-500/70">Connect with me</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors leading-snug">
+						LinkedIn Profile
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">linkedin.com/in/luisiitodev</p>
+				</div>
+			</a>
+
+			<!-- GitHub -->
+			<a 
+				href="https://github.com/LuisiitoDev" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-5 p-5 rounded-xl border border-slate-500/20 dark:border-slate-800/20 bg-slate-500/5 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-slate-900/10 dark:bg-white/10 text-slate-900 dark:text-slate-100 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg viewBox="0 0 16 16" width="24" height="24" fill="currentColor">
+						<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-slate-500/70">View my code</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors leading-snug">
+						GitHub Profile
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">github.com/LuisiitoDev</p>
+				</div>
+			</a>
+
+			<!-- X (Twitter) -->
+			<a 
+				href="https://x.com/luisiitodev" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-5 p-5 rounded-xl border border-slate-500/20 dark:border-slate-800/20 bg-slate-50/40 dark:bg-slate-900/10 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-slate-900/10 dark:bg-white/10 text-slate-900 dark:text-slate-100 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-slate-500/70">Follow me</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-slate-900 dark:group-hover:text-slate-50 transition-colors leading-snug">
+						X / Twitter
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">x.com/luisiitodev</p>
+				</div>
+			</a>
+		</div>
+	</div>
 </Layout>

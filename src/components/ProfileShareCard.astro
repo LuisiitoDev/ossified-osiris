@@ -1,0 +1,446 @@
+---
+// ProfileShareCard.astro
+// Interactive component to display and share a digital profile card suitable for stories.
+---
+
+<div class="profile-share-wrapper flex flex-col items-center justify-center mb-10">
+	<!-- High Catchy Call to Action Button with Pulse Effect -->
+	<button 
+		id="open-share-card" 
+		class="relative flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white font-bold text-sm sm:text-base transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-purple-500/30 hover:scale-[1.03] active:scale-[0.98] cursor-pointer group"
+	>
+		<!-- Ring Pulse Animation -->
+		<span class="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 opacity-40 blur-md group-hover:opacity-60 transition-opacity animate-pulse"></span>
+		
+		<span class="relative flex items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5 text-white animate-bounce">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186l5.302-3.181m0 0a2.25 2.25 0 103.935-2.186 2.25 2.25 0 00-3.935 2.186zm0-2.186N2.25 2.25 0 002.25 12c0 .412.11.8.3-1.137l5.302 3.181m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0 2.186l5.302 3.18" />
+			</svg>
+			Share my profile
+		</span>
+	</button>
+</div>
+
+<!-- Modal Container -->
+<div id="share-card-modal" class="modal-overlay hidden fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md opacity-0 transition-opacity duration-300">
+	<div class="modal-content glass-card max-w-sm w-full rounded-2xl p-6 relative transform scale-95 transition-transform duration-300 border border-slate-200/50 dark:border-slate-800/50 max-h-[90vh] overflow-y-auto">
+		
+		<!-- Close Button -->
+		<button id="close-share-modal" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer z-50" aria-label="Close modal">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+			</svg>
+		</button>
+		
+		<div class="flex flex-col items-center">
+			<h3 class="text-lg sm:text-xl font-extrabold tracking-tight mb-1 text-slate-900 dark:text-slate-50 text-center font-title">
+				Your Profile Story Card
+			</h3>
+			<p class="text-[11px] text-slate-500 dark:text-slate-400 text-center mb-5 max-w-[260px] leading-relaxed">
+				Download this card as a high-quality vertical image to share on your WhatsApp, Instagram, or Facebook stories!
+			</p>
+			
+			<!-- Card Visual Preview (Story Aspect 9:16 representation) -->
+			<div class="flex justify-center mb-5 w-full">
+				<div id="html-card-preview" class="w-56 h-[370px] rounded-xl relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl border border-slate-800/80 bg-slate-950 text-white select-none">
+					<!-- Background ambient glows -->
+					<div class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/20 rounded-full blur-xl"></div>
+					<div class="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-xl"></div>
+					
+					<!-- Inner glass frame -->
+					<div class="absolute inset-1.5 border border-white/5 rounded-lg bg-white/[0.02] pointer-events-none"></div>
+					
+					<div class="flex flex-col items-center text-center mt-2.5 z-10">
+						<!-- Profile picture inside white border -->
+						<div class="w-16 h-16 rounded-full border-2 border-white overflow-hidden shadow-md mb-2 bg-slate-900">
+							<img 
+								src="/luis-sandoval.png" 
+								alt="Luis Sandoval" 
+								style="width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 9999px !important; margin: 0 !important; max-width: none !important;"
+								class="select-none"
+							/>
+						</div>
+						
+						<h4 class="text-base font-bold tracking-tight text-white mb-0.5 font-title">Luis Sandoval</h4>
+						<p class="text-[10px] font-semibold text-indigo-400 mb-0.5 font-sans">Senior Software Engineer</p>
+						<p class="text-[9px] text-slate-400 mb-2 flex items-center gap-1 font-sans">
+							<span>📍 Cartago, Costa Rica</span>
+						</p>
+						
+						<div class="w-full h-[1px] bg-white/10 mb-2"></div>
+						
+						<p class="text-[8px] uppercase tracking-wider font-extrabold text-slate-500 mb-1.5 font-title">Core Expertise</p>
+						<div class="flex flex-wrap justify-center gap-1 px-1">
+							{['.NET', 'Azure', 'AI Solutions', 'DevOps'].map(skill => (
+								<span class="text-[8px] font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-indigo-300 font-sans">
+									{skill}
+								</span>
+							))}
+						</div>
+					</div>
+					
+					<!-- Footer links -->
+					<div class="flex flex-col items-center mb-2.5 z-10">
+						<div class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[8px] font-bold text-white tracking-wide font-sans">
+							luisiitodev.com
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Action Buttons -->
+			<div class="space-y-2.5 w-full">
+				<button id="download-card-png" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm transition-all duration-300 shadow-md shadow-indigo-600/10 active:-translate-y-0.5 cursor-pointer">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+					</svg>
+					Download PNG Image
+				</button>
+				
+				<div class="h-[1px] bg-slate-200/50 dark:bg-slate-800/50 my-1 w-full"></div>
+				
+				<div class="flex gap-2 w-full">
+					<!-- Whatsapp -->
+					<a id="share-whatsapp" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/20 dark:hover:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold text-[11px] border border-emerald-200/30 dark:border-emerald-800/20 transition-all select-none">
+						WhatsApp
+					</a>
+					
+					<!-- Facebook -->
+					<a id="share-facebook" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/20 dark:hover:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-[11px] border border-blue-200/30 dark:border-blue-800/20 transition-all select-none">
+						Facebook
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const setupShareCardModal = () => {
+		const openBtn = document.getElementById('open-share-card');
+		const closeBtn = document.getElementById('close-share-modal');
+		const modal = document.getElementById('share-card-modal');
+		const content = modal?.querySelector('.modal-content');
+		const downloadBtn = document.getElementById('download-card-png');
+		
+		const whatsappLink = document.getElementById('share-whatsapp') as HTMLAnchorElement;
+		const facebookLink = document.getElementById('share-facebook') as HTMLAnchorElement;
+
+		if (!modal || !openBtn || !closeBtn) return;
+
+		// Configure social share links
+		const currentUrl = window.location.href;
+		const shareText = encodeURIComponent("Check out Luis Sandoval's Software Engineer profile card!");
+		
+		if (whatsappLink) {
+			whatsappLink.href = `https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(currentUrl)}`;
+		}
+		if (facebookLink) {
+			facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+		}
+
+		// Helper to render high-res canvas
+		const generateCanvas = (): Promise<HTMLCanvasElement | null> => {
+			return new Promise((resolve) => {
+				const canvas = document.createElement('canvas');
+				canvas.width = 1080;
+				canvas.height = 1920;
+				const ctx = canvas.getContext('2d');
+				if (!ctx) {
+					resolve(null);
+					return;
+				}
+
+				// 1. Background Gradient
+				const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+				grad.addColorStop(0, '#090d16');
+				grad.addColorStop(0.5, '#111827');
+				grad.addColorStop(1, '#030712');
+				ctx.fillStyle = grad;
+				ctx.fillRect(0, 0, 1080, 1920);
+
+				// 2. Ambient glows
+				ctx.fillStyle = 'rgba(99, 102, 241, 0.15)'; // indigo glow
+				ctx.beginPath();
+				ctx.arc(1080, 0, 700, 0, 2 * Math.PI);
+				ctx.fill();
+
+				ctx.fillStyle = 'rgba(168, 85, 247, 0.12)'; // purple glow
+				ctx.beginPath();
+				ctx.arc(0, 1920, 600, 0, 2 * Math.PI);
+				ctx.fill();
+
+				// 3. Rounded Rect Card Wrapper
+				ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+				ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+				ctx.lineWidth = 4;
+				
+				const rx = 100, ry = 220, rw = 880, rh = 1480, rrad = 48;
+				ctx.beginPath();
+				ctx.moveTo(rx + rrad, ry);
+				ctx.lineTo(rx + rw - rrad, ry);
+				ctx.quadraticCurveTo(rx + rw, ry, rx + rw, ry + rrad);
+				ctx.lineTo(rx + rw, ry + rh - rrad);
+				ctx.quadraticCurveTo(rx + rw, ry + rh, rx + rw - rrad, ry + rh);
+				ctx.lineTo(rx + rrad, ry + rh);
+				ctx.quadraticCurveTo(rx, ry + rh, rx, ry + rh - rrad);
+				ctx.lineTo(rx, ry + rrad);
+				ctx.quadraticCurveTo(rx, ry, rx + rrad, ry);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
+
+				// 4. Load profile photo
+				const img = new Image();
+				img.onload = () => {
+					// Draw avatar circle
+					ctx.save();
+					ctx.beginPath();
+					ctx.arc(540, 520, 180, 0, 2 * Math.PI);
+					ctx.clip();
+					ctx.drawImage(img, 360, 340, 360, 360);
+					ctx.restore();
+
+					// Draw white avatar frame ring
+					ctx.strokeStyle = '#ffffff';
+					ctx.lineWidth = 10;
+					ctx.beginPath();
+					ctx.arc(540, 520, 180, 0, 2 * Math.PI);
+					ctx.stroke();
+
+					// 5. Draw text
+					// Name
+					ctx.fillStyle = '#ffffff';
+					ctx.font = 'bold 72px Outfit, sans-serif';
+					ctx.textAlign = 'center';
+					ctx.fillText('Luis Sandoval', 540, 830);
+
+					// Role Title
+					ctx.fillStyle = '#818cf8';
+					ctx.font = '600 44px Inter, sans-serif';
+					ctx.fillText('Senior Software Engineer', 540, 900);
+
+					// Location
+					ctx.fillStyle = '#94a3b8';
+					ctx.font = '500 34px Inter, sans-serif';
+					ctx.fillText('📍 Cartago, Costa Rica', 540, 965);
+
+					// Divider line
+					ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+					ctx.lineWidth = 2;
+					ctx.beginPath();
+					ctx.moveTo(250, 1040);
+					ctx.lineTo(830, 1040);
+					ctx.stroke();
+
+					// Skills Header
+					ctx.fillStyle = '#64748b';
+					ctx.font = 'bold 32px Outfit, sans-serif';
+					ctx.fillText('CORE EXPERTISE', 540, 1120);
+
+					// Draw Skills list
+					const skillsList = ['.NET', 'Azure', 'AI Solutions', 'DevOps'];
+					ctx.font = 'bold 36px Inter, sans-serif';
+					
+					let currentY = 1200;
+					skillsList.forEach((skill) => {
+						ctx.fillStyle = 'rgba(99, 102, 241, 0.08)';
+						ctx.strokeStyle = 'rgba(99, 102, 241, 0.2)';
+						ctx.lineWidth = 2;
+						
+						const pillW = 320;
+						const pillH = 70;
+						const pillX = 540 - (pillW / 2);
+						const pillY = currentY - 50;
+						const pillRad = 35;
+						
+						ctx.beginPath();
+						ctx.moveTo(pillX + pillRad, pillY);
+						ctx.lineTo(pillX + pillW - pillRad, pillY);
+						ctx.quadraticCurveTo(pillX + pillW, pillY, pillX + pillW, pillY + pillRad);
+						ctx.lineTo(pillX + pillW, pillY + pillH - pillRad);
+						ctx.quadraticCurveTo(pillX + pillW, pillY + pillH, pillX + pillW - pillRad, pillY + pillH);
+						ctx.lineTo(pillX + pillRad, pillY + pillH);
+						ctx.quadraticCurveTo(pillX, pillY + pillH, pillX, pillY + pillH - pillRad);
+						ctx.lineTo(pillX, pillY + pillRad);
+						ctx.quadraticCurveTo(pillX, pillY, pillX + pillRad, pillY);
+						ctx.closePath();
+						ctx.fill();
+						ctx.stroke();
+
+						ctx.fillStyle = '#e2e8f0';
+						ctx.fillText(skill, 540, currentY);
+						currentY += 95;
+					});
+
+					// Website footer pill
+					ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+					ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+					ctx.lineWidth = 3;
+					
+					const fpX = 350, fpY = 1530, fpW = 380, fpH = 80, fpRad = 40;
+					ctx.beginPath();
+					ctx.moveTo(fpX + fpRad, fpY);
+					ctx.lineTo(fpX + fpW - fpRad, fpY);
+					ctx.quadraticCurveTo(fpX + fpW, fpY, fpX + fpW, fpY + fpRad);
+					ctx.lineTo(fpX + fpW, fpY + fpH - fpRad);
+					ctx.quadraticCurveTo(fpX + fpW, fpY + fpH, fpX + fpW - fpRad, fpY + fpH);
+					ctx.lineTo(fpX + fpRad, fpY + fpH);
+					ctx.quadraticCurveTo(fpX, fpY + fpH, fpX, fpY + fpH - fpRad);
+					ctx.lineTo(fpX, fpY + fpRad);
+					ctx.quadraticCurveTo(fpX, fpY, fpX + fpRad, fpY);
+					ctx.closePath();
+					ctx.fill();
+					ctx.stroke();
+
+					ctx.fillStyle = '#ffffff';
+					ctx.font = 'bold 36px Inter, sans-serif';
+					ctx.fillText('luisiitodev.com', 540, 1582);
+
+					resolve(canvas);
+				};
+
+				img.onerror = () => {
+					resolve(null);
+				};
+
+				img.src = '/luis-sandoval.png';
+			});
+		};
+
+		// Open Modal Action
+		openBtn.addEventListener('click', async () => {
+			// Web Share API with files check (Native Story/Image sharing on mobile devices!)
+			// We generate the image first, check if Web Share handles files, and share it directly!
+			if (navigator.share && navigator.canShare) {
+				try {
+					const canvas = await generateCanvas();
+					if (canvas) {
+						canvas.toBlob(async (blob) => {
+							if (blob) {
+								const file = new File([blob], 'luis-sandoval-profile.png', { type: 'image/png' });
+								if (navigator.canShare({ files: [file] })) {
+									await navigator.share({
+										files: [file],
+										title: 'Luis Sandoval Profile Story',
+										text: `Check out my profile: ${currentUrl}`
+									});
+									return; // Successful mobile native share, stop executing modal open
+								}
+							}
+						}, 'image/png');
+						// If blob creation is asynchronous, let's also support opening modal as a clean backup
+					}
+				} catch (err) {
+					console.warn('Web Share failed, falling back to modal preview', err);
+				}
+			}
+
+			// Desktop / Fallback: open modal preview
+			modal.classList.remove('hidden');
+			void modal.offsetWidth;
+			modal.style.opacity = '1';
+			if (content) {
+				content.classList.remove('scale-95');
+				content.classList.add('scale-100');
+			}
+		});
+
+		// Close Modal Action
+		const closeModal = () => {
+			modal.style.opacity = '0';
+			if (content) {
+				content.classList.remove('scale-100');
+				content.classList.add('scale-95');
+			}
+			setTimeout(() => {
+				modal.classList.add('hidden');
+			}, 300);
+		};
+
+		closeBtn.addEventListener('click', closeModal);
+		modal.addEventListener('click', (e) => {
+			if (e.target === modal) closeModal();
+		});
+
+		// Manual download PNG trigger inside Modal
+		if (downloadBtn) {
+			downloadBtn.addEventListener('click', async () => {
+				const originalText = downloadBtn.innerHTML;
+				downloadBtn.innerHTML = `
+					<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+						<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					</svg>
+					Downloading...
+				`;
+				downloadBtn.setAttribute('disabled', 'true');
+
+				const canvas = await generateCanvas();
+				if (canvas) {
+					try {
+						const link = document.createElement('a');
+						link.download = 'luis-sandoval-profile-story.png';
+						link.href = canvas.toDataURL('image/png');
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
+					} catch (e) {
+						console.error('Failed to convert canvas to data URL', e);
+					}
+				}
+
+				downloadBtn.innerHTML = originalText;
+				downloadBtn.removeAttribute('disabled');
+			});
+		}
+	};
+
+	// Initialize on page load
+	setupShareCardModal();
+	// Support view transitions
+	document.addEventListener('astro:after-swap', setupShareCardModal);
+</script>
+
+<style>
+	.modal-overlay {
+		transition: opacity 0.3s ease;
+	}
+
+	.modal-content {
+		display: flex;
+		flex-direction: column; /* Fixed the CSS flex-col column bug! */
+		max-height: 90vh;
+	}
+
+	#html-card-preview {
+		box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+	}
+
+	/* Force the avatar image to fill the shape and ignore global .prose img styles */
+	#html-card-preview img {
+		margin: 0 !important;
+		padding: 0 !important;
+		border-radius: 9999px !important;
+		height: 100% !important;
+		width: 100% !important;
+		object-fit: cover !important;
+		box-shadow: none !important;
+		display: block !important;
+		max-width: none !important;
+	}
+	
+	/* Spin animation for loading state */
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	
+	.animate-spin {
+		animation: spin 1s linear infinite;
+	}
+</style>

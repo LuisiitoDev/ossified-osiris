@@ -4,82 +4,91 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import SocialShare from '../components/SocialShare.astro';
+import VisitorCounter from '../components/VisitorCounter.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
+		<BaseHead title={title} description={description} image={heroImage} />
 	</head>
 
-	<body>
+	<body class="transition-colors duration-300">
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img width={300} height={300} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+		<main class="max-w-4xl px-4 py-8 sm:py-12 mx-auto">
+			<article class="w-full">
+				{heroImage && (
+					<div class="hero-image-wrapper mb-8 sm:mb-12 overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl/40">
+						<img 
+							width={960} 
+							height={480} 
+							src={heroImage} 
+							alt={title} 
+							class="w-full h-[240px] sm:h-[400px] object-cover hover:scale-[1.01] transition-transform duration-500 ease-out"
+						/>
 					</div>
-					<slot />
+				)}
+				
+				<div class="prose-card glass-card rounded-2xl px-6 py-8 sm:p-12">
+					<div class="text-center mb-8 pb-8 border-b border-slate-200/50 dark:border-slate-800/50">
+						<div class="flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500 dark:text-slate-400 mb-4">
+							<div class="inline-flex items-center gap-1">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 opacity-80">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+								</svg>
+								<FormattedDate date={pubDate} />
+							</div>
+							
+							{updatedDate && (
+								<div class="italic text-xs bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 py-0.5 px-2 rounded-full border border-indigo-100/30 dark:border-indigo-900/20">
+									Last updated: <FormattedDate date={updatedDate} />
+								</div>
+							)}
+							
+							<span class="hidden sm:inline opacity-30 text-slate-400 dark:text-slate-600">&bull;</span>
+							
+							<VisitorCounter slug={canonicalURL.pathname} increment={true} />
+						</div>
+						
+						<h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-900 dark:from-slate-50 dark:via-slate-100 dark:to-indigo-200 bg-clip-text text-transparent mb-2">
+							{title}
+						</h1>
+					</div>
+
+					<div class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300">
+						<slot />
+					</div>
+
+					<SocialShare title={title} url={canonicalURL.toString()} />
 				</div>
 			</article>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	/* Custom styles specifically for layout wrapper */
+	.hero-image-wrapper img {
+		box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+	}
+	
+	html.dark .hero-image-wrapper img {
+		box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+	}
+	
+	.prose-card {
+		/* Inherits .glass-card, overrides padding locally if needed */
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.prose-card:hover {
+		/* Prevent aggressive hover lift on the entire article reader page, keep it subtle */
+		transform: translateY(-2px);
+	}
+</style>

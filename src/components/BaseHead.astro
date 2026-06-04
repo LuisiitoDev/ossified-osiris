@@ -12,42 +12,126 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const fullImageUrl = new URL(image, Astro.site).toString();
+
+// Generate dynamic JSON-LD structured data for search crawlers
+const isArticle = Astro.url.pathname !== '/' && Astro.url.pathname !== '/about' && Astro.url.pathname !== '/about/';
+const schema = isArticle 
+	? {
+		"@context": "https://schema.org",
+		"@type": "BlogPosting",
+		"headline": title,
+		"description": description,
+		"image": fullImageUrl,
+		"url": canonicalURL.toString(),
+		"author": {
+			"@type": "Person",
+			"name": "Luis Sandoval",
+			"url": "https://luisiitodev.com/about"
+		},
+		"publisher": {
+			"@type": "Organization",
+			"name": "LuisiitoDev",
+			"logo": {
+				"@type": "ImageObject",
+				"url": new URL('/favicon.png', Astro.site).toString()
+			}
+		}
+	  }
+	: {
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		"name": "LuisiitoDev",
+		"description": "Luis Sandoval - Personal Developer Blog",
+		"url": "https://luisiitodev.com",
+		"author": {
+			"@type": "Person",
+			"name": "Luis Sandoval",
+			"sameAs": [
+				"https://github.com/LuisiitoDev",
+				"https://www.linkedin.com/in/luisiitodev/",
+				"https://x.com/luisiitodev"
+			]
+		}
+	  };
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+<link rel="icon" type="image/png" href="/favicon.png" />
 <meta name="generator" content="Astro" />
 <meta name="theme-color" content="#000000" />
+
+<!-- SEO / Indexing meta tags -->
+<meta name="robots" content="index, follow" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/atkinson-regular.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/atkinson-bold.woff2" as="font" type="font/woff2" crossorigin />
 
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Dark Mode Initialization -->
+<script is:inline>
+	const theme = (() => {
+		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+			return localStorage.getItem('theme');
+		}
+		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			return 'dark';
+		}
+		return 'light';
+	})();
+
+	if (theme === 'dark') {
+		document.documentElement.classList.add('dark');
+	} else {
+		document.documentElement.classList.remove('dark');
+	}
+	window.localStorage.setItem('theme', theme);
+</script>
+
 <!-- Canonical URL -->
-<link rel="canonical" href="https://luisiitodev.com/{canonicalURL}" />
+<link rel="canonical" href={canonicalURL.toString()} />
 
 <!-- Primary Meta Tags -->
-<title>LuisiitoDev</title>
-<meta name="title" content="LuisiitoDev" />
-<meta name="description" content="Luis Alberto Sandoval Monestel, conocido como LuisiitoDev, es un desarrollador de software en Cartago, Costa Rica. Conocido por su trabajo en .NET MAUI, Xamarin y ReactJS." />
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://luisiitodev.com" />
-<meta property="og:title" content="LuisiitoDev" />
-<meta property="og:description" content="Luis Alberto Sandoval Monestel, conocido como LuisiitoDev, es un desarrollador de software en Cartago, Costa Rica. Conocido por su trabajo en .NET MAUI, Xamarin y ReactJS." />
-<meta property="og:image" content="https://luisiitodev.com/blog-placeholder-about.jpg" />
-<meta property="og:locale" content="es_ES" />
+<meta property="og:url" content={canonicalURL.toString()} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={fullImageUrl} />
+<meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="LuisiitoDev" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content="https://luisiitodev.com" />
-<meta property="twitter:title" content="LuisiitoDev" />
-<meta property="twitter:description" content="Luis Alberto Sandoval Monestel, conocido como LuisiitoDev, es un desarrollador de software en Cartago, Costa Rica. Conocido por su trabajo en .NET MAUI, Xamarin y ReactJS." />
-<meta property="twitter:image" content="https://luisiitodev.com" />
+<meta property="twitter:url" content={canonicalURL.toString()} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={fullImageUrl} />
 <meta property="twitter:creator" content="@LuisiitoDev" />
+
+<!-- Google tag (gtag.js) -->
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-EXBQ5YPHWG"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EXBQ5YPHWG');
+</script>
 
 
