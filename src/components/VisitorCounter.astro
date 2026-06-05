@@ -43,18 +43,18 @@ const { slug, increment = false } = Astro.props;
 				const url = `https://api.counterapi.dev/v1/luisiitodev-blog/${cleanSlug}${shouldIncrement ? '/up' : ''}`;
 				const res = await fetch(url);
 				
-				// If status is 400 (Bad Request), it usually means the key doesn't exist yet
-				if (res.status === 400) {
-					const data = await res.json();
-					if (data.message === "record not found" || data.code === 400) {
-						valueEl.textContent = `0 views`;
-						continue;
-					}
+				// Si solo estamos leyendo y devuelve 404/400, el registro no existe aún
+				if (!shouldIncrement && (res.status === 404 || res.status === 400)) {
+					valueEl.textContent = `0 views`;
+					continue;
 				}
 
 				if (!res.ok) throw new Error('Counter API fetch failed');
 				const data = await res.json();
 				valueEl.textContent = `${data.count} views`;
+				
+				// Sincronizamos con el storage local para que el respaldo sea preciso
+				localStorage.setItem(`views-local-${cleanSlug}`, data.count.toString());
 			} catch (e) {
 				console.error(`Failed to fetch views for ${cleanSlug}`, e);
 				
@@ -63,9 +63,9 @@ const { slug, increment = false } = Astro.props;
 				let localCount = 0;
 				try {
 					localCount = parseInt(localStorage.getItem(storageKey) || '0');
-					if (shouldIncrement && localCount === 0) {
-						localCount = 1;
-						localStorage.setItem(storageKey, '1');
+					if (shouldIncrement) {
+						localCount++;
+						localStorage.setItem(storageKey, localCount.toString());
 					}
 				} catch (_) {
 					// Ignore localStorage errors
