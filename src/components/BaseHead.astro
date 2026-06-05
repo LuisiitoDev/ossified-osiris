@@ -38,22 +38,34 @@ const schema = isArticle
 			}
 		}
 	  }
-	: {
-		"@context": "https://schema.org",
-		"@type": "WebSite",
-		"name": "LuisiitoDev",
-		"description": "Luis Sandoval - Personal Developer Blog",
-		"url": "https://luisiitodev.com",
-		"author": {
+	: [
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"name": "LuisiitoDev",
+			"description": "Luis Sandoval - Personal Developer Blog",
+			"url": "https://luisiitodev.com"
+		},
+		{
+			"@context": "https://schema.org",
 			"@type": "Person",
 			"name": "Luis Sandoval",
+			"alternateName": ["LuisiitoDev", "Luisiito"],
+			"url": "https://luisiitodev.com",
+			"image": "https://luisiitodev.com/luis-sandoval.png",
+			"jobTitle": "Senior Software Engineer",
+			"worksFor": {
+				"@type": "Organization",
+				"name": "Gestión en Tecnología e Información GTI"
+			},
 			"sameAs": [
 				"https://github.com/LuisiitoDev",
 				"https://www.linkedin.com/in/luisiitodev/",
 				"https://x.com/luisiitodev"
-			]
+			],
+			"knowsAbout": [".NET", "Azure", "C#", "SQL Server", "DevOps"]
 		}
-	  };
+	  ];
 ---
 
 <!-- Global Metadata -->
@@ -133,5 +145,3 @@ const schema = isArticle
 
   gtag('config', 'G-EXBQ5YPHWG');
 </script>
-
-
