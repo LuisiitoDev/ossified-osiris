@@ -108,7 +108,7 @@ npx @modelcontextprotocol/inspector
 
 ![Terminal running npx @modelcontextprotocol/inspector](/img/mcp/4.png)
 
-The Inspector opens in the browser. Our server uses the STDIO transport, so we configure it with the command that launches the server (in our case `dotnet run` pointing to the project) and click **Connect**:
+The Inspector opens in the browser. Our server uses the STDIO transport, so we configure it with the command that launches the server (in our case `dotnet` pointing to the dll of my MCP server) and click **Connect**:
 
 ![MCP Inspector connection screen with STDIO transport selected](/img/mcp/5.png)
 
