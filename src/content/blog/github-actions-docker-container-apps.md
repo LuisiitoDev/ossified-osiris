@@ -1,60 +1,48 @@
 ---
-title: 'From Push to Production with GitHub Actions, Docker and GHCR'
-description: 'Building a React app into a Docker image, publishing it to GitHub Container Registry and deploying to Azure Container Apps.'
+title: 'React + Docker + GitHub Actions'
+description: 'Building a React app into a Docker image, publishing it to GitHub Container Registry and deploying it to Azure Container Apps.'
 pubDate: 'Aug 10 2026'
 heroImage: '/img/GitHubActionsDocker/hero.png'
+tags: ['github-actions', 'docker', 'ghcr', 'azure', 'react']
 ---
 
 <h2 align="center">
-    From Push to Production: GitHub Actions, Docker, GHCR and Azure Container Apps
+    From Push to Production with GitHub Actions, Docker and GHCR
 </h2>
 
-Hello friends! In my last post about [SQL Database DevOps](/sql-database-devops/) we automated a database deployment with GitHub Actions. Today I want to do the same thing but for a frontend application, and this time the artifact is not a `.dacpac`, it is a **Docker image**.
+Hello friends! In my last post about [SQL Database DevOps](/sql-database-devops/) we deployed a database with GitHub Actions, and the artifact of that pipeline was a `.dacpac` file. Today we are going to do something very similar but for a frontend application, and this time the artifact is a **Docker image**.
 
-The idea is simple: I push code, GitHub Actions builds and tests it, packages it into a container image, pushes that image to **GitHub Container Registry (GHCR)** and then tells **Azure Container Apps** to run it. No manual steps, no `docker push` from my laptop, and no passwords stored anywhere. 🧑🏻‍💻
+The idea is simple: I push my code, GitHub Actions builds and tests it, packages everything into a container image, pushes that image to **GitHub Container Registry** and finally tells **Azure Container Apps** to run it. No manual steps, no `docker push` from my laptop, and no passwords stored anywhere. 🧑🏻‍💻
 
-You can check all the code in my GitHub repository: [react-github-actions-demo](https://github.com/LuisiitoDev/react-github-actions-demo), and the result is live here: [Rick and Morty Multiverse Explorer](https://rickandmortyreactdemo.wittymushroom-27985f5c.westus2.azurecontainerapps.io/).
+You can check all the code of this implementation in my GitHub repository: [react-github-actions-demo](https://github.com/LuisiitoDev/react-github-actions-demo), and you can see it running here: [Rick and Morty Multiverse Explorer](https://rickandmortyreactdemo.wittymushroom-27985f5c.westus2.azurecontainerapps.io/).
 
-The app itself is a small React + TypeScript + Vite application that consumes the public [Rick and Morty API](https://rickandmortyapi.com/) and lets you browse characters, locations and episodes. It is intentionally simple, because the interesting part today is everything that happens **after** you press push.
+## The application
+
+For this example I built a small React + TypeScript + Vite application that consumes the public [Rick and Morty API](https://rickandmortyapi.com/) (yes, again this show, I really love it 😁). It lets you browse the characters, the locations and the episodes:
 
 ![Characters grid showing Rick, Morty, Summer, Beth and Jerry with their status pills](/img/GitHubActionsDocker/characters.png)
 
-Every card opens a detail panel with the data coming from the API:
+Every card opens a panel with the information of the character:
 
 ![Character detail modal for Rick Sanchez showing status, species, gender, origin, location and episode count](/img/GitHubActionsDocker/character-modal.png)
 
-And the episodes view groups every transmission by season:
+And in the episodes section we can see all the episodes grouped by season:
 
 ![Episodes view listing season 1 episodes with air dates and detected character counts](/img/GitHubActionsDocker/episodes.png)
 
-The app even renders its own pipeline on the landing page, so you can see the whole trip at a glance:
+The application is intentionally simple, because the interesting part of this post is everything that happens **after** we press push. In fact, the landing page draws the pipeline that we are going to build:
 
 ![Deployment pipeline: React build, GitHub Actions, Docker image, GHCR and Azure Container Apps](/img/GitHubActionsDocker/pipeline.png)
 
----
-
-## The big picture
-
-Before jumping into YAML, let's understand the pieces:
-
-| Piece | Responsibility |
-| --- | --- |
-| **Dockerfile** | Turns the React source into a tiny nginx image that serves static files. |
-| **GHCR** | Stores every image we build, tagged by commit SHA. |
-| **GitHub Actions (CI)** | Lint, test and build on every Pull Request. |
-| **GitHub Actions (CD)** | Build the image, push it to GHCR, and update the Container App. |
-| **Azure Container Apps** | Runs the container, gives us HTTPS ingress and scale-to-zero. |
-| **Bicep** | Creates the infrastructure so nothing is clicked in the portal. |
-
-Something important here: the **image is the artifact**. CI validates the source code, but what we deploy is an immutable image tagged with the commit SHA, so we always know exactly what is running in production.
+Something important before we start: in this pipeline **the image is the artifact**. The CI validates our source code, but what we deploy is an image tagged with the commit SHA, so we always know exactly what is running in production.
 
 ---
 
-## Multi-stage Dockerfile
+## Let's see the Dockerfile
 
-A very common mistake when containerizing a React app is shipping the whole `node_modules` folder to production. We do not need Node at runtime! Once Vite generates the `dist` folder, everything we need is plain HTML, CSS and JS, so a small nginx image is more than enough.
+A very common mistake when we containerize a React application is to ship the whole `node_modules` folder to production. We do not need Node at runtime! Once Vite generates the `dist` folder, everything we need is plain HTML, CSS and JavaScript, so a small nginx image is more than enough.
 
-For this reason, we use a multi-stage build:
+For this reason we use a multi-stage build:
 
 ```dockerfile
 FROM node:22-alpine AS base
@@ -82,13 +70,11 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-Let's see what is happening:
+Well, in the first stage we copy only the `package*.json` files and after that we run `npm ci`. This is not random, it is done because of the **layer caching**: if our source code changes but our dependencies do not, Docker reuses the cached layer of `npm ci` and the build is much faster.
 
-1. **`base` stage**: we copy only `package*.json` first and run `npm ci`. This is not random, it is done for **layer caching**. If your source code changes but your dependencies do not, Docker reuses the cached `npm ci` layer and the build is much faster.
-2. **`build` stage**: runs `npm run build` and produces the `dist` folder.
-3. **Final stage**: starts from `nginx:1.27-alpine` and copies **only** the `dist` folder with `COPY --from=build`. The Node toolchain never reaches the final image.
+The second stage runs `npm run build` and generates the `dist` folder, and in the last stage we start from `nginx:1.27-alpine` and we copy **only** that folder using `COPY --from=build`. The Node toolchain never arrives to the final image.
 
-We also have a `.dockerignore` file, which is as important as the Dockerfile itself:
+We also have a `.dockerignore` file, which in my opinion is as important as the Dockerfile:
 
 ```
 node_modules
@@ -102,11 +88,11 @@ coverage
 README.md
 ```
 
-Without it, your local `node_modules` gets sent to the Docker daemon as build context, making the build slow for no reason.
+Without this file our local `node_modules` is sent to the Docker daemon as build context, and the build becomes slow for no reason.
 
-### Do not forget the nginx config
+### Do not forget the nginx configuration
 
-React apps are Single Page Applications, so if the user refreshes on `/characters`, nginx will look for a file with that name, will not find it, and will return a 404. To avoid this, we need a `try_files` fallback to `index.html`:
+React applications are Single Page Applications, so if the user refreshes the browser in `/characters`, nginx is going to look for a file with that name, it will not find it, and it will return a 404. To avoid this we need a `try_files` fallback to `index.html`:
 
 ```nginx
 server {
@@ -130,13 +116,13 @@ server {
 }
 ```
 
-Notice that nginx listens on **8080** and not on 80. This is on purpose: Container Apps does not require root, and using a non privileged port is a good practice. Just remember that the port here must match the `targetPort` of your ingress, otherwise your app will build perfectly and still answer nothing.
+Notice that nginx is listening in the port **8080** and not in the 80. This is on purpose, Container Apps does not require root and using a non privileged port is a good practice. Just remember this port has to match the `targetPort` of our ingress, if not our application is going to build perfectly and it will answer nothing.
 
 ---
 
 ## Continuous Integration
 
-The CI workflow is the gatekeeper. It runs on every Pull Request against `main` and it does not build any image, it only validates that the code is healthy:
+The CI workflow is our gatekeeper. It runs on every Pull Request against `main` and it does not build any image, it only validates that the code is healthy:
 
 ```yaml
 name: CI
@@ -176,13 +162,13 @@ jobs:
         run: npm run build
 ```
 
-Nothing fancy: lint, test with Vitest, and a build to be sure TypeScript is happy. The `cache: 'npm'` option makes `setup-node` restore the npm cache between runs, which saves a good amount of time.
+Nothing fancy here: linter, tests with Vitest, and a build to be sure that TypeScript is happy. A small recommendation, do not forget the option `cache: 'npm'`, it makes `setup-node` restore the npm cache between runs and it saves a good amount of time.
 
 ---
 
 ## Continuous Deployment
 
-Now the fun part. The CD workflow is triggered by `workflow_run`, so it only starts when CI finished, and only continues if CI finished **successfully**:
+Now the fun part! Our CD workflow is triggered with `workflow_run`, this means it only starts when the CI has finished, and it only continues if the CI finished **successfully**:
 
 ```yaml
 name: CD
@@ -209,13 +195,9 @@ env:
   AZURE_CONTAINER_APP_NAME: ${{ vars.APP_NAME }}
 ```
 
-Those three permissions are exactly what we need and nothing more:
+Those three permissions are exactly what we need and nothing more: `id-token: write` to request the OIDC token for Azure, `contents: read` to checkout the code, and `packages: write` to push our image to GHCR.
 
-* `id-token: write` → required to request an OIDC token for Azure.
-* `contents: read` → to checkout the code.
-* `packages: write` → to push the image to GHCR.
-
-### Job 1: publish the image to GHCR
+### Publishing the image to GHCR
 
 ```yaml
 jobs:
@@ -260,21 +242,19 @@ jobs:
           cache-to: type=gha,mode=max
 ```
 
-There are a few details here that I really like:
+Let's see some details of this job that I really like.
 
-**1. We checkout the exact commit that CI validated.** When a workflow is triggered by `workflow_run`, by default it checks out the default branch, which could already have new commits. Using `ref: ${{ github.event.workflow_run.head_sha }}` guarantees that the image contains exactly the code that passed CI.
+The first one is the checkout. When a workflow is triggered by `workflow_run`, by default it checks out the default branch, and that branch could have new commits already. Using `ref: ${{ github.event.workflow_run.head_sha }}` we guarantee that our image contains exactly the code that passed the CI.
 
-**2. GHCR authentication is free.** We do not need to create a Personal Access Token, the automatic `secrets.GITHUB_TOKEN` is enough as long as we declared `packages: write`.
+The second one is the authentication against GHCR. We do not need to create a Personal Access Token, the automatic `secrets.GITHUB_TOKEN` is enough as long as we declared `packages: write` in the permissions. Very comfortable.
 
-**3. `${IMAGE_NAME,,}` lowercases the string.** This is a Bash parameter expansion, and it is necessary because container registries only accept lowercase repository names, but my GitHub user is `LuisiitoDev` with capital letters. Without this, the push fails with a very confusing error.
+The third one took me a while to figure out the first time: the expression `${IMAGE_NAME,,}`. This is a Bash parameter expansion that converts the string to lowercase, and it is necessary because the container registries only accept lowercase repository names, but my GitHub user is `LuisiitoDev` with capital letters. Without this the push fails with a very confusing error, so be careful with this one!
 
-**4. Two tags, two purposes.** The `:latest` tag is comfortable for humans, and the commit SHA tag is the one we actually deploy, because it is immutable and traceable.
+Also we are pushing two tags. The `:latest` tag is comfortable for us the humans, but the tag with the commit SHA is the one that we really deploy, because it is immutable and we can trace it. And the label `org.opencontainers.image.source` is what links the package in GHCR with our repository, so the package page shows the README and it inherits the visibility of the repo.
 
-**5. `org.opencontainers.image.source` label.** This is what links the package in GHCR back to the repository, so the package page shows the README and inherits the repo visibility.
+Finally, with `cache-from: type=gha` and `cache-to: type=gha,mode=max` the Docker layers are stored in the GitHub Actions cache, so that layer of `npm ci` that we talked about is reused between runs.
 
-**6. GitHub Actions cache for Docker layers.** With `cache-from: type=gha` and `cache-to: type=gha,mode=max` the layers are stored in the Actions cache, so the `npm ci` layer is reused between runs.
-
-### Job 2: deploy to Azure Container Apps
+### Deploying to Azure Container Apps
 
 ```yaml
   deploy:
@@ -311,17 +291,17 @@ There are a few details here that I really like:
           echo "Production URL: ${{ steps.appurl.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
 ```
 
-Same OIDC login that we used in the SQL post: **no secrets with passwords**, GitHub exchanges a short-lived token with Entra ID and that is it. Notice that the Azure identifiers live in `vars` (repository variables) and not in `secrets`, because a subscription id or a resource group name is not really a secret.
+Here we use the same OIDC login that we used in the SQL post, so again **no secrets with passwords**, GitHub exchanges a short lived token with Entra ID and that is it. Something to notice is that the Azure identifiers are in `vars` (repository variables) and not in `secrets`, because a subscription id or the name of a resource group is not really a secret.
 
-The deployment itself is a single `az containerapp update --image ...`. Container Apps creates a new revision with the new image, waits until it is healthy, and moves the traffic. If the new revision never becomes healthy, the old one keeps serving, which is a nice safety net for free.
+And the deployment itself is only one command, `az containerapp update --image ...`. Container Apps creates a new revision with our new image, it waits until it is healthy and then it moves the traffic. If the new revision never becomes healthy the old one keeps serving our users, which is a very nice safety net for free.
 
-The last step writes the production URL into `$GITHUB_STEP_SUMMARY`, so at the end of every deployment you get a clickable link in the workflow summary page instead of hunting for the FQDN in the portal. Small detail, but very comfortable.
+The last step writes the production URL in `$GITHUB_STEP_SUMMARY`, so at the end of every deployment we get a clickable link in the summary page of the workflow instead of looking for the FQDN in the portal. It is a small detail but I use it a lot.
 
 ---
 
 ## The infrastructure with Bicep
 
-I did not want to create the Container App by clicking in the portal, so the managed environment and the app itself live in `infra/main.bicep`:
+I did not want to create the Container App clicking in the portal, so the managed environment and the application live in a `infra/main.bicep` file:
 
 ```bicep
 param location string = resourceGroup().location
@@ -377,13 +357,9 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
 }
 ```
 
-Some things worth mentioning:
+There are three things worth mentioning in this template. The `targetPort: 8080` matches the `listen 8080` of our nginx configuration, as I said before these two must always agree. The `minReplicas: 0` means **scale to zero**, so if nobody is visiting the site we do not pay anything for compute, and the price of this is a cold start in the first request after some idle time, which for a demo like this one is perfect. And the rule `http-concurrency` scales out when a replica is handling more than 50 concurrent requests, until a maximum of 3 replicas.
 
-* `targetPort: 8080` matches the `listen 8080` of our nginx config. As I said before, this pair must always agree.
-* `minReplicas: 0` means **scale to zero**. If nobody visits the site, we pay nothing for compute. The price is a cold start on the first request after an idle period, which for a demo is a perfect trade.
-* The `http-concurrency` rule scales out when a replica is handling more than 50 concurrent requests, up to 3 replicas.
-
-The infrastructure workflow is separated from the application one, and it only runs when something under `infra/**` changes. It also validates the template before deploying it:
+The infrastructure workflow is separated from the application one, and it only runs when something inside `infra/**` changes:
 
 ```yaml
 on:
@@ -394,6 +370,8 @@ on:
             - 'infra/**'
     workflow_dispatch:
 ```
+
+It also validates the template before deploying it, which saves us from a lot of typos:
 
 ```yaml
             - name: Validate Bicep
@@ -408,28 +386,28 @@ on:
                 --output none
 ```
 
-You will notice the placeholder image `containerapps-helloworld`. This is because the infrastructure and the application have different lifecycles: the Bicep template only needs to guarantee that the Container App **exists**, and the CD workflow is the one responsible for pointing it to the real image. If we hardcoded our image in Bicep, every infrastructure deployment would roll production back to whatever tag is written in the template.
+You probably noticed the placeholder image `containerapps-helloworld`. This is because the infrastructure and the application have different lifecycles: the Bicep template only needs to guarantee that the Container App **exists**, and the CD workflow is the one responsible for pointing it to the real image. If we put our image hardcoded in the Bicep, every deployment of the infrastructure would return the production to whatever tag is written in the template.
 
 ---
 
-## A couple of things I learned
+## Some things that I learned
 
-* **Make the image public in GHCR, or give Container Apps credentials.** By default a package published from a repository is private. If the Container App cannot pull the image, the revision fails to provision and the error in the portal is not very explicit. Either flip the package visibility to public, or configure a registry secret on the Container App.
-* **`workflow_run` only triggers from the default branch.** The workflow file must already be in `main` for the CD to fire, so testing it from a feature branch will not work as you expect.
-* **Ports are the number one cause of a "successful deployment" that answers nothing.** nginx port, `EXPOSE`, and `targetPort` should tell the same story.
+The first time I configured this pipeline everything was green and my application was answering nothing, so let me share with you the things that took me more time:
 
----
+* By default the package published from a repository is **private**. If the Container App can not pull the image the revision fails to provision, and the error in the portal is not very explicit. We can change the visibility of the package to public, or configure a registry secret in the Container App.
+* The `workflow_run` trigger only works from the default branch. The workflow file has to be already in `main` for the CD to fire, so testing it from a feature branch will not work like we expect.
+* And the ports, always the ports. The port of nginx, the `EXPOSE` and the `targetPort` should tell the same story.
 
 ## Wrap up
 
-With this setup, the full trip from a Pull Request to production is completely automated: CI validates the code, Docker packages it into a small nginx image, GHCR stores it tagged by commit SHA, and Azure Container Apps runs it behind HTTPS with scale to zero. And the only credentials involved are short-lived OIDC tokens.
+With this setup the complete trip from a Pull Request to production is automated: the CI validates our code, Docker packages it into a small nginx image, GHCR stores it tagged with the commit SHA, and Azure Container Apps runs it behind HTTPS with scale to zero. And the only credentials involved are short lived OIDC tokens.
 
-The best part is that this pattern is not React specific at all. Change the Dockerfile and the exact same pipeline deploys an API, a worker, or whatever you can put inside a container.
+And the best part is that this pattern is not something only for React, if we change the Dockerfile the same pipeline deploys an API, a worker, or whatever we can put inside a container.
 
 I hope that it could be helpfull, Happy coding!!! 🧑🏻‍💻 😁
 
 ### References:
-* [Working with the Container registry (GHCR)](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+* [Working with the Container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 * [Azure Container Apps documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
 * [Configure OpenID Connect in Azure](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure)
 * [Docker multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
