@@ -17,6 +17,16 @@ You can check all the code in my GitHub repository: [react-github-actions-demo](
 
 The app itself is a small React + TypeScript + Vite application that consumes the public [Rick and Morty API](https://rickandmortyapi.com/) and lets you browse characters, locations and episodes. It is intentionally simple, because the interesting part today is everything that happens **after** you press push.
 
+![Characters grid showing Rick, Morty, Summer, Beth and Jerry with their status pills](/img/GitHubActionsDocker/characters.png)
+
+Every card opens a detail panel with the data coming from the API:
+
+![Character detail modal for Rick Sanchez showing status, species, gender, origin, location and episode count](/img/GitHubActionsDocker/character-modal.png)
+
+And the episodes view groups every transmission by season:
+
+![Episodes view listing season 1 episodes with air dates and detected character counts](/img/GitHubActionsDocker/episodes.png)
+
 The app even renders its own pipeline on the landing page, so you can see the whole trip at a glance:
 
 ![Deployment pipeline: React build, GitHub Actions, Docker image, GHCR and Azure Container Apps](/img/GitHubActionsDocker/pipeline.png)
