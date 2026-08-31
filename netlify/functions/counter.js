@@ -50,18 +50,22 @@ export default async (req, context) => {
 			{ headers: { Authorization: `Bearer ${TOKEN}` } }
 		);
 
-		if (apiRes.status === 404) {
+		if (apiRes.status === 404 && !shouldIncrement) {
+			// Reading a counter that's never been hit yet is a normal "0 views", not an error.
 			return json({ count: 0 });
 		}
 
 		if (!apiRes.ok) {
-			throw new Error(`Counter API responded with ${apiRes.status}`);
+			const upstreamBody = await apiRes.json().catch(() => null);
+			throw new Error(
+				`Counter API responded with ${apiRes.status}: ${upstreamBody?.message ?? 'unknown error'}`
+			);
 		}
 
 		const body = await apiRes.json();
 		return json({ count: body?.data?.up_count ?? 0 });
 	} catch (err) {
-		return json({ error: 'Failed to reach Counter API' }, 502);
+		return json({ error: 'Failed to reach Counter API', detail: err.message }, 502);
 	}
 };
 
