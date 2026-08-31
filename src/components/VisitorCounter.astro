@@ -39,15 +39,10 @@ const { slug, increment = false } = Astro.props;
 			}
 
 			try {
-				// Use counterapi.dev v1
-				const url = `https://api.counterapi.dev/v1/luisiitodev-blog/${cleanSlug}${shouldIncrement ? '/up' : ''}`;
+				// Proxied through a Netlify Function (netlify/functions/counter.js) holding the
+				// CounterAPI v2 token, since v2 requires auth and blocks it via CORS from the browser
+				const url = `/api/counter/${cleanSlug}${shouldIncrement ? '?increment=true' : ''}`;
 				const res = await fetch(url);
-				
-				// Si solo estamos leyendo y devuelve 404/400, el registro no existe aún
-				if (!shouldIncrement && (res.status === 404 || res.status === 400)) {
-					valueEl.textContent = `0 views`;
-					continue;
-				}
 
 				if (!res.ok) throw new Error('Counter API fetch failed');
 				const data = await res.json();
