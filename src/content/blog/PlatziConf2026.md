@@ -13,8 +13,8 @@ On August 29th, I attended my second Platzi Conf. It was such an amazing experie
 There were a lot of interesting talks, but these were the ones that I wanted to attend:
 
 * **How GPUs Are Accelerating Science** By Katrina Riehl - NVIDIA
-* **¿Qué significa ser developer hoy en día?** By Ana Cunha - AWS
-* **Por qué AI te exige pensar más tu ingeniería** By Javier Guignard - Platzi
+* **What does it mean to be a developer today?** By Ana Cunha - AWS
+* **Why AI Makes You Think More About Engineering** By Javier Guignard - Platzi
 
 In this blog, I want to share with you my experience and what I learned from these talks. I also want to encourage you to attend future editions or other tech conferences. I believe attending these kinds of events can help you understand where technology is heading.
 
