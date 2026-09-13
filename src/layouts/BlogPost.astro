@@ -11,6 +11,9 @@ type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const isBadgeHero = heroImage === '/img/GitHubActions/actions.png';
+const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 ---
 
 <html lang="en">
@@ -23,14 +26,45 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 		<main class="max-w-4xl px-4 py-8 sm:py-12 mx-auto">
 			<article class="w-full">
 				{heroImage && (
-					<div class="hero-image-wrapper mb-8 sm:mb-12 overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl/40">
-						<img 
-							width={960} 
-							height={480} 
-							src={heroImage} 
-							alt={title} 
-							class="w-full h-[240px] sm:h-[400px] object-cover hover:scale-[1.01] transition-transform duration-500 ease-out"
-						/>
+					<div class:list={[
+						'hero-image-wrapper mb-8 sm:mb-12 overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl/40',
+						{ 'flex justify-center bg-slate-50 dark:bg-slate-900/40': isBadgeHero },
+						{ 'bg-slate-950': isGitHubActionsHero },
+					]}>
+						{isBadgeHero ? (
+							<img
+								width={302}
+								height={299}
+								src={heroImage}
+								alt={title}
+								class="h-auto max-w-[302px] object-contain hover:scale-[1.01] transition-transform duration-500 ease-out"
+							/>
+						) : isGitHubActionsHero ? (
+							<div class="github-actions-hero">
+								<img
+									width={1600}
+									height={520}
+									src={heroImage}
+									alt={title}
+									class="github-actions-hero-background w-full h-auto object-contain"
+								/>
+								<img
+									width={302}
+									height={299}
+									src="/img/GitHubActions/actions.png"
+									alt="GitHub Actions certification badge"
+									class="github-actions-badge"
+								/>
+							</div>
+						) : (
+							<img
+								width={960}
+								height={480}
+								src={heroImage}
+								alt={title}
+								class="w-full h-[240px] sm:h-[400px] object-cover hover:scale-[1.01] transition-transform duration-500 ease-out"
+							/>
+						)}
 					</div>
 				)}
 				
@@ -77,6 +111,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 	.hero-image-wrapper img {
 		box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
 	}
+
+	.github-actions-hero {
+		position: relative;
+		line-height: 0;
+	}
+
+	.github-actions-hero-background {
+		box-shadow: none !important;
+	}
+
+	.github-actions-badge {
+		position: absolute;
+		left: 4%;
+		top: 18%;
+		width: 22%;
+		height: auto;
+		filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.45));
+		transition: transform 0.5s ease-out;
+	}
+
+	.github-actions-hero:hover .github-actions-badge {
+		transform: scale(1.02) rotate(-1deg);
+	}
 	
 	html.dark .hero-image-wrapper img {
 		box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
@@ -90,5 +147,30 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 	.prose-card:hover {
 		/* Prevent aggressive hover lift on the entire article reader page, keep it subtle */
 		transform: translateY(-2px);
+	}
+
+	/* Label/value resource lists rendered from blog post markdown (e.g. Resources section) */
+	:global(.resource-list) {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 1.25rem 0;
+	}
+
+	:global(.resource-list > div) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+		align-items: baseline;
+	}
+
+	:global(.resource-list dt) {
+		font-weight: 700;
+		color: rgb(var(--gray-dark));
+		min-width: 7rem;
+	}
+
+	:global(.resource-list dd) {
+		margin: 0;
 	}
 </style>

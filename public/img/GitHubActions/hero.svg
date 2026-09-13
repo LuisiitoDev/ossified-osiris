@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1600 520" role="img" aria-label="GitHub Actions certification">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#030712"/>
+      <stop offset=".62" stop-color="#050816"/>
+      <stop offset="1" stop-color="#0b1b35"/>
+    </linearGradient>
+    <linearGradient id="check" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#67e8f9"/>
+      <stop offset=".55" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#312e81"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop offset="0" stop-color="#2563eb" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#60a5fa" stroke-opacity=".08"/>
+    </pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000" flood-opacity=".5"/>
+    </filter>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="520" fill="url(#background)"/>
+  <rect width="1600" height="520" fill="url(#grid)"/>
+  <ellipse cx="1330" cy="120" rx="360" ry="250" fill="url(#halo)"/>
+  <ellipse cx="430" cy="430" rx="430" ry="230" fill="#172554" opacity=".16"/>
+
+  <g transform="translate(70 54)">
+    <rect width="270" height="42" rx="21" fill="#172554" stroke="#60a5fa" stroke-opacity=".35"/>
+    <circle cx="25" cy="21" r="5" fill="#67e8f9"/>
+    <text x="45" y="27" fill="#bae6fd" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" letter-spacing="3">CERTIFICATION</text>
+  </g>
+
+  <text x="535" y="275" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="bold">GitHub Actions</text>
+  <text x="540" y="325" fill="#86efac" font-family="Arial, Helvetica, sans-serif" font-size="22" letter-spacing="3">CERTIFICATION PROGRAM</text>
+
+  <path d="M505 290H1000" stroke="#60a5fa" stroke-opacity=".3" stroke-width="2" stroke-dasharray="9 13"/>
+  <circle cx="620" cy="290" r="6" fill="#67e8f9" filter="url(#soft-glow)"/>
+  <circle cx="875" cy="290" r="6" fill="#67e8f9" filter="url(#soft-glow)"/>
+  <path d="M1000 290l-18-11v22z" fill="#67e8f9"/>
+
+  <g transform="translate(1130 90) rotate(-8 180 145)" filter="url(#shadow)">
+    <rect width="360" height="270" rx="62" fill="url(#check)"/>
+    <rect x="5" y="5" width="350" height="260" rx="58" fill="none" stroke="#dbeafe" stroke-opacity=".5" stroke-width="3"/>
+    <path d="M90 138l57 57 125-137" fill="none" stroke="#ecfeff" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  </g>
+</svg>
