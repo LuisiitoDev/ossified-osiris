@@ -31,7 +31,7 @@ function countFrom(value, source) {
   return count;
 }
 
-function configFor(env) {
+export function configFor(env) {
   const url = env.UPSTASH_REDIS_REST_URL?.trim();
   const token = env.UPSTASH_REDIS_REST_TOKEN?.trim();
   if (url || token) {
@@ -46,7 +46,7 @@ function configFor(env) {
   return { provider: 'counterapi' };
 }
 
-async function redisCommand(config, fetchImpl, command) {
+export async function redisCommand(config, fetchImpl, command) {
   const res = await fetchImpl(config.url, {
     method: 'POST',
     headers: {
@@ -85,7 +85,7 @@ async function counterApiRead(slug, env, fetchImpl, increment = false) {
   return countFrom(payload?.data?.up_count, 'CounterAPI');
 }
 
-async function ensureMigration(slug, key, config, env, fetchImpl) {
+export async function ensureMigration(slug, key, config, env, fetchImpl) {
   if (env.COUNTER_MIGRATE_FROM_COUNTERAPI !== 'true') return;
   const current = await redisCommand(config, fetchImpl, ['GET', key]);
   if (current !== null) {
