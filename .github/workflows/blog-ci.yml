@@ -20,11 +20,13 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Test Markdown image defaults
-        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs
+        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs scripts/searchArticles.test.mjs
       - name: Build using Netlify image delivery settings
         run: NETLIFY=true npm run build
       - name: Verify RSS and sitemap are generated
         run: |
           test -f dist/rss.xml
           test -f dist/sitemap-index.xml
+          test -f dist/search/index.html
+          grep -q 'name="robots" content="noindex, follow"' dist/search/index.html
           grep -R -q '/.netlify/images' dist
