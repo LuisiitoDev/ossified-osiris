@@ -19,6 +19,8 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Test Markdown image defaults
+        run: node --test scripts/rehypeLazyImages.test.mjs
       - run: npm run build
       - name: Verify RSS and sitemap are generated
         run: |
