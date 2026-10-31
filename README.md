@@ -130,3 +130,30 @@ The Netlify Function runs server-side and keeps provider tokens secret:
 Migration will **not** recover values already missing from CounterAPI. If CounterAPI returns an error or a missing counter for a previously published article, migration fails visibly instead of silently seeding zero. Back up the old counts before cutover if possible. During cutover, avoid sending writes to the old provider from a second active deployment, otherwise any late writes after the snapshot are not transferred.
 
 **Important:** A partial configuration does not silently switch to CounterAPI. If Redis is configured but inaccessible, the UI shows unavailable and Netlify logs a diagnostic; correcting provider permissions/connectivity is required.
+
+## Anonymous visitor deduplication and basic abuse protection
+
+The visit endpoint uses **Upstash Redis** for a 24-hour per-article deduplication window.
+A `POST /api/counter/<slug>` counts a returning browser only once within that
+period. Other browsers can still count individually, even on the same network.
+A short-lived, first-party `ldv_visitor` cookie (24 hours, `HttpOnly`, `Secure`,
+`SameSite=Lax`) holds a random identifier. Its value is HMAC-hashed before it
+is used in Redis keys; the Redis REST token is the server-only HMAC key.
+
+Netlify provides the real visitor IP through `context.ip`; the function does
+**not trust** caller-supplied `X-Forwarded-For` headers. Only keyed hashes of
+IPs and anonymous identifiers are stored in short-lived Redis keys. The server
+limits fresh views to **30 per hour per browser** and **90 per hour per IP**.
+A rejected request responds `429` with the current total and no increment.
+This is basic abuse mitigation, **not** a guarantee against distributed bots,
+proxy rotation or deliberately cleared cookies. Shared network IP limits can
+occasionally block legitimate visits, and browsers that reject cookies may
+be counted more than once. Consider applicable cookie-notice/consent and
+privacy obligations for the blog's visitors before production rollout.
+
+The existing `luisiitodev:views:v1:<slug>` total keys are unchanged; enabling
+these controls does not delete or reset current Upstash totals. These limits
+apply to Upstash-backed writes. The original CounterAPI fallback remains
+available for read compatibility but protected POST requires Redis.
+
+Run regression tests with `node --test scripts/viewProtection.test.mjs`.

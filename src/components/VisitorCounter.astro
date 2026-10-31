@@ -51,7 +51,9 @@ const { slug, increment = false } = Astro.props;
 					cache: 'no-store',
 					headers: { Accept: 'application/json' },
 				});
-				if (!res.ok) throw new Error('Counter request returned HTTP ' + res.status);
+				if (!res.ok && res.status !== 429) {
+					throw new Error('Counter request returned HTTP ' + res.status);
+				}
 				const data = await res.json();
 				if (!Number.isSafeInteger(data?.count) || data.count < 0) {
 					throw new Error('Counter returned an invalid count');
