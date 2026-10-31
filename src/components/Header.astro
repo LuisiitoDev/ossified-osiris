@@ -3,8 +3,9 @@ import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
+<a class="skip-to-main" href="#main-content">Skip to main content</a>
 <header class="sticky top-0 z-50 transition-colors duration-300">
-	<nav class="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
+	<nav aria-label="Main navigation" class="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
 		<h2 class="text-xl font-bold tracking-tight">
 			<a href="/" class="brand-link bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
 				{SITE_TITLE}
@@ -38,7 +39,7 @@ import { SITE_TITLE } from '../consts';
 			<div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-800"></div>
 
 			<!-- Theme Toggle Button -->
-			<button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+			<button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Dark mode" aria-pressed="false">
 				<!-- Moon icon for light mode (turns on dark mode) -->
 				<svg class="moon-icon block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -59,10 +60,12 @@ import { SITE_TITLE } from '../consts';
 			// Remove existing listeners if any
 			const newBtn = themeToggleBtn.cloneNode(true);
 			themeToggleBtn.parentNode?.replaceChild(newBtn, themeToggleBtn);
+			(newBtn as HTMLButtonElement).setAttribute('aria-pressed', document.documentElement.classList.contains('dark') ? 'true' : 'false');
 			
 			newBtn.addEventListener('click', () => {
 				const element = document.documentElement;
 				const isDark = element.classList.toggle('dark');
+				(newBtn as HTMLButtonElement).setAttribute('aria-pressed', isDark ? 'true' : 'false');
 				localStorage.setItem('theme', isDark ? 'dark' : 'light');
 			});
 		}
@@ -76,6 +79,33 @@ import { SITE_TITLE } from '../consts';
 </script>
 
 <style>
+  .skip-to-main {
+    position: fixed;
+    z-index: 100;
+    top: 0.75rem;
+    left: 0.75rem;
+    transform: translateY(-170%);
+    padding: 0.7rem 1rem;
+    border-radius: 0.7rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 2px solid #6366f1;
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.15);
+  }
+
+  .skip-to-main:focus-visible {
+    transform: translateY(0);
+    outline: 3px solid #818cf8;
+    outline-offset: 2px;
+  }
+
+  html.dark .skip-to-main {
+    color: #f8fafc;
+    background: #0f172a;
+  }
+
 	header {
 		background: rgba(255, 255, 255, 0.75);
 		backdrop-filter: blur(12px);
