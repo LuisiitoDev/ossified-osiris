@@ -60,79 +60,36 @@ const fundamentalsCertifications = [
 	pubDate={new Date('December 05 2024')}
 	updatedDate={new Date('October 31 2026')}
 >
-	<!-- Profile photo with a compact, keyboard-accessible achievement badge. -->
-	<div class="mb-10 -mt-4 flex flex-col items-center justify-center">
-		<div class="relative z-20 h-36 w-36 sm:h-40 sm:w-40">
-			<!-- Keep the circular crop on the image, not on the parent: the badge/card must be visible outside it. -->
+	<!-- Profile image with a small Copilot proficiency badge; no overlay/card obscures the portrait. -->
+	<div class="mb-7 -mt-4 flex flex-col items-center justify-center">
+		<div class="relative h-36 w-36 sm:h-40 sm:w-40">
 			<div class="h-full w-full overflow-hidden rounded-full border border-slate-200/30 shadow-md dark:border-slate-800/30">
 				<img
 					src="/luis-sandoval.png"
 					alt="Luis Sandoval"
 					width="160"
 					height="160"
-					class="h-full w-full select-none object-cover"
+					class="about-avatar-image block h-full w-full select-none object-cover"
 				/>
 			</div>
-
-			<!-- Native details/summary supports Enter, Space, touch and screen readers. -->
-			<details class="group pointer-events-none absolute inset-0" data-copilot-badge>
-				<summary
-					class="pointer-events-auto absolute -bottom-3 -right-4 cursor-pointer list-none rounded-2xl border border-violet-400/35 bg-slate-950 p-1 shadow-lg shadow-violet-900/25 transition-transform duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500 [&::-webkit-details-marker]:hidden"
-					aria-label="GitHub Copilot Pro Badge, Proficient. Show or hide achievement details"
-					title="GitHub Copilot Pro Badge — Proficient"
-				>
-					<img
-						src="/copilot-pro-proficient.webp"
-						width="64"
-						height="64"
-						alt=""
-						class="block h-14 w-14 object-contain sm:h-16 sm:w-16"
-						loading="eager"
-						decoding="async"
-					/>
-				</summary>
-
-				<div class="pointer-events-auto absolute left-1/2 top-[calc(100%+1rem)] w-[min(19rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-violet-300/60 bg-white p-5 text-left shadow-2xl shadow-slate-900/15 dark:border-violet-500/40 dark:bg-slate-900 dark:shadow-black/40" role="region" aria-label="GitHub Copilot Proficient badge details">
-					<div class="flex items-center gap-3">
-						<img
-							src="/copilot-pro-proficient.webp"
-							width="64"
-							height="64"
-							alt=""
-							class="h-16 w-16 shrink-0 object-contain"
-							loading="lazy"
-						/>
-						<div class="min-w-0">
-							<p class="mb-1 text-xs font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">GitHub Copilot Pro Badge</p>
-							<p class="mb-0 text-base font-extrabold text-slate-900 dark:text-slate-50">Proficient</p>
-						</div>
-					</div>
-					<p class="mb-0 mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-						A recognition of proficiency using GitHub Copilot in software development. Earned October 2026.
-					</p>
-					<p class="mb-0 mt-2 text-xs text-slate-500 dark:text-slate-400">Skill recognition · Separate from Microsoft certifications</p>
-				</div>
-			</details>
+			<img
+				src="/copilot-pro-proficient.webp"
+				alt=""
+				aria-hidden="true"
+				width="48"
+				height="48"
+				class="about-copilot-badge pointer-events-none absolute -bottom-1 -right-1 h-11 w-11 object-contain drop-shadow-md sm:h-12 sm:w-12"
+				loading="eager"
+				decoding="async"
+			/>
 		</div>
-	</div>
 
-	<script>
-		// Keep the information card dismissible without interfering with native keyboard activation.
-		document.addEventListener('pointerdown', (event) => {
-			const target = event.target;
-			if (!(target instanceof Node)) return;
-			document.querySelectorAll<HTMLDetailsElement>('details[data-copilot-badge][open]').forEach((card) => {
-				if (!card.contains(target)) card.open = false;
-			});
-		});
-		document.addEventListener('keydown', (event) => {
-			if (event.key !== 'Escape') return;
-			document.querySelectorAll<HTMLDetailsElement>('details[data-copilot-badge][open]').forEach((card) => {
-				card.open = false;
-				card.querySelector('summary')?.focus();
-			});
-		});
-	</script>
+		<p class="mt-4 mb-0 inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/5 px-3 py-1.5 text-xs font-medium leading-normal text-slate-600 dark:border-violet-400/25 dark:bg-violet-400/10 dark:text-slate-300">
+			<span>GitHub Copilot</span>
+			<span aria-hidden="true" class="h-1 w-1 rounded-full bg-violet-400"></span>
+			<span class="font-bold text-violet-700 dark:text-violet-300">Proficient</span>
+		</p>
+	</div>
 
 	<!-- Interactive Profile Share Card Modal -->
 	<ProfileShareCard />
@@ -452,3 +409,44 @@ const fundamentalsCertifications = [
 		</div>
 	</div>
 </Layout>
+
+<!-- About profile images are inside the shared article .prose container.
+     Its default article-image rules (height:auto, margin:2rem, object-fit:contain)
+     must NOT apply to the circular avatar or the floating badge. -->
+<style is:global>
+  #article-content img.about-avatar-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  #article-content img.about-copilot-badge {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: contain;
+  }
+
+  @media (min-width: 640px) {
+    #article-content img.about-copilot-badge {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+</style>
