@@ -28,5 +28,9 @@ jobs:
           test -f dist/rss.xml
           test -f dist/sitemap-index.xml
           test -f dist/search/index.html
+          if grep -q 'https://luisiitodev.com/search/' dist/sitemap-*.xml; then
+            echo 'Internal search should not be in the sitemap'
+            exit 1
+          fi
           grep -q 'name="robots" content="noindex, follow"' dist/search/index.html
           grep -R -q '/.netlify/images' dist
