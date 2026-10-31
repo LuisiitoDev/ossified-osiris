@@ -1,8 +1,9 @@
 ---
 title: 'AZ-204 Microsoft Azure Developer Associate'
-description: 'Guide to Azure Developer'
+description: 'How I prepared for and earned the AZ-204 Azure Developer Associate certification, with learning resources and advice from my exam experience.'
 pubDate: 'Jan 01 2024'
 heroImage: '/img/AzureDeveloper/azdeveloper2.jpg'
+tags: ['azure', 'certifications', 'career']
 ---
 
 <h2 align="center">
