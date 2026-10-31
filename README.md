@@ -82,3 +82,28 @@ CI checks do not substitute for mobile accessibility review, production performa
 ## Attribution
 
 This blog was originally based on the [Astro Blog template](https://github.com/withastro/astro/tree/main/examples/blog), which credits [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+## Internal link and image checks
+
+CI validates generated site links with `node scripts/validate-internal-links.mjs`
+after `npm run build`. It checks all generated HTML pages for:
+
+- Internal article routes, topic pages, page links and static asset references.
+- Local image sources including the **original assets** behind Netlify Image CDN URLs.
+- Same-site heading anchors, including table-of-contents links.
+
+It reports the generated page and reference that failed, then fails CI. This
+requires no additional dependency and does not make network requests.
+**External sites are not tested** (their availability and rate limits are outside
+our build's control). Netlify runtime endpoints under `/api/` are excluded
+because the static build cannot validate deployed functions.
+
+To run the check locally:
+
+```bash
+npm run build
+node scripts/validate-internal-links.mjs
+```
+
+The checks have fixture-based regression tests in
+`scripts/validate-internal-links.test.mjs`.
