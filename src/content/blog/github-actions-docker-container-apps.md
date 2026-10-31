@@ -275,7 +275,7 @@ Finally, with `cache-from: type=gha` and `cache-to: type=gha,mode=max` the Docke
     needs: publish
     steps:
       - name: Log in to Azure using OIDC
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ env.AZURE_CLIENT_ID }}
           tenant-id: ${{ env.AZURE_TENANT_ID }}
