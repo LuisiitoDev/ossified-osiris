@@ -34,3 +34,9 @@ jobs:
           fi
           grep -q 'name="robots" content="noindex, follow"' dist/search/index.html
           grep -R -q '/.netlify/images' dist
+      - name: Verify localized Spanish article metadata
+        run: |
+          grep -R -q 'lang="es"' dist
+          grep -R -q 'property="og:locale" content="es_CR"' dist
+          grep -R -q '"inLanguage":"es"' dist
+
