@@ -6,8 +6,10 @@ const article = (filename) =>
   readFileSync(new URL(`../src/content/blog/${filename}`, import.meta.url), 'utf8');
 
 const fencedBlockContaining = (markdown, language, marker) => {
-  const blocks = [...markdown.matchAll(new RegExp(`\\`\\`\\`${language}\\n([\\s\\S]*?)\\n\\`\\`\\``, 'g'))];
-  const block = blocks.map((entry) => entry[1]).find((code) => code.includes(marker));
+  const fence = '```' + language + '\n';
+  const blocks = markdown.split(fence).slice(1)
+    .map((section) => section.split('\n```')[0]);
+  const block = blocks.find((code) => code.includes(marker));
   assert.ok(block, `Missing ${language} example containing: ${marker}`);
   return block;
 };
