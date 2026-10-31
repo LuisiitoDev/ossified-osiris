@@ -1,8 +1,9 @@
 ---
 title: 'Azure AD B2C'
-description: 'Azure Active Directory | Azure Entra'
+description: 'Configure Azure AD B2C custom authentication policies with Facebook sign-in and a .NET application, including app registrations and Identity Experience Framework.'
 pubDate: 'Oct 20 2022'
 heroImage: '/img/AzureB2C/active-directory.jpeg'
+tags: ['azure', 'azure-ad-b2c', 'identity', 'authentication']
 ---
 
 <h2 align="center">

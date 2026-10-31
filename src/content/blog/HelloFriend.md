@@ -1,8 +1,9 @@
 ---
 title: 'HelloFriend.cs'
-description: 'Console.WriteLine("Hello Friend!!");'
+description: 'An introduction to Luis Sandoval and his software development blog, covering C#, .NET, React, SQL Server, Xamarin, and Azure.'
 pubDate: 'March 03 2022'
 heroImage: '/HelloFriend.jpeg'
+tags: ['career', 'dotnet']
 ---
 
 Ohhh! Hi! I'm glad you are here.

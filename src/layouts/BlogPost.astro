@@ -13,16 +13,16 @@ import { responsiveImageAttributes } from '../utils/imageCdn.mjs';
 
 type Props = CollectionEntry<'blog'>['data'] & { isArticle?: boolean; postId?: string; headings?: { depth: number; slug: string; text: string }[] };
 
-const { title, description, pubDate, updatedDate, heroImage, isArticle = true, postId, tags = [], headings = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, isArticle = true, postId, tags = [], headings = [], lang = 'en' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const isBadgeHero = heroImage === '/img/GitHubActions/actions.png';
 const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} image={heroImage} pubDate={pubDate} updatedDate={updatedDate} isArticle={isArticle} />
+		<BaseHead title={title} description={description} image={heroImage} pubDate={pubDate} updatedDate={updatedDate} isArticle={isArticle} lang={lang} tags={tags} />
 	</head>
 
 	<body class="transition-colors duration-300">

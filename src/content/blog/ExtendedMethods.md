@@ -1,8 +1,9 @@
 ---
 title: 'ExtendedMethods.cs'
-description: 'Developer.SayHello(👋);'
+description: 'Learn how C# extension methods add functionality to existing types using static classes, the this keyword, and a practical .NET example.'
 pubDate: 'March 03 2022'
 heroImage: '/img/ExtendedMethods/csharp.jpg'
+tags: ['csharp', 'dotnet']
 ---
 
 <h2 align="center">

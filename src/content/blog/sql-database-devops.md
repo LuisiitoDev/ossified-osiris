@@ -1,8 +1,9 @@
 ---
 title: 'SQL Database DevOps'
-description: 'Automating SQL Server deployments using DACPAC and GitHub Actions.'
+description: 'Build a SQL Server database project into a DACPAC and deploy schema changes to Azure SQL using GitHub Actions, MSBuild, and OIDC authentication.'
 pubDate: 'Jun 03 2026'
 heroImage: '/img/SQLDataBaseDevOps/hero.png'
+tags: ['sql-server', 'azure', 'devops', 'github-actions', 'ci-cd']
 ---
 
 <h2 align="center">
