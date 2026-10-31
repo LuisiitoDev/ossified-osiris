@@ -326,3 +326,9 @@ html.dark .glass-card {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Headings linked from the table of contents remain visible below the sticky header. */
+#article-content h2[id],
+#article-content h3[id] {
+  scroll-margin-top: 6rem;
+}
