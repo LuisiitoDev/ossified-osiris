@@ -2,9 +2,12 @@
 title: 'SQL Database DevOps'
 description: 'Build a SQL Server database project into a DACPAC and deploy schema changes to Azure SQL using GitHub Actions, MSBuild, and OIDC authentication.'
 pubDate: 'Jun 03 2026'
+updatedDate: 'Oct 31 2026'
 heroImage: '/img/SQLDataBaseDevOps/hero.png'
 tags: ['sql-server', 'azure', 'devops', 'github-actions', 'ci-cd']
 ---
+
+> **Security update (October 2026):** The original `workflow_run` deployment example needed a trust boundary. A successful PR build must **not** automatically authorize deployment of its DACPAC artifact using a privileged workflow. The revised CD example below deploys only successful **push** builds from the repository's trusted `master` branch. Configure GitHub Environment protection rules, restrict Azure OIDC federated trust, and verify the source of artifacts before deployment. Read [GitHub's secure-use guidance](https://docs.github.com/en/actions/reference/security/secure-use).
 
 <h2 align="center">
     SQL Server DevOps: CI/CD with DACPAC and GitHub Actions
@@ -59,7 +62,7 @@ CREATE TABLE [dbo].[Song]
 (
     [Id] INT NOT NULL PRIMARY KEY,
     [Name] VARCHAR(500) NOT NULL,
-    [Author] VARCHAR(500) NOT NULL,
+    [Author] VARCHAR(500) NOT NULL
 )
 ```
 
@@ -112,7 +115,7 @@ Well, this workflow compiles the project using MSBuild and uploads the generated
 
 ## Continuous Deployment: Deploying to Azure SQL
 
-After the build is successful, we want to publish the schema changes to our target database. To do it, we created a separate CD workflow `cd-database.yml` that is triggered automatically when the CI build finishes:
+After the build is successful, we want to publish the schema changes to our target database. To do it, we created a separate CD workflow `cd-database.yml` that is triggered after CI completes. **Only an approved push to `master` can execute the deployment job**; PR CI runs remain useful for validation but are not promoted:
 
 ```yaml
 name: Database CD - Deploy
@@ -122,6 +125,8 @@ on:
     workflows: ["Database CI - Build DACPAC"]
     types:
       - completed
+    branches:
+      - master
 
 permissions:
   actions: read
@@ -132,8 +137,14 @@ jobs:
   deploy-development:
     name: Deploy to Development
     runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment: Production
+    if: >-
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'master' &&
+        github.event.workflow_run.head_repository.full_name == github.repository
+      }}
+    environment: Development
     
     steps:
       - name: Download DACPAC Artifact
@@ -181,20 +192,20 @@ jobs:
 
 ### Let's see how this works:
 
-1. **Trigger**: The workflow starts when the CI workflow finishes successfully.
+1. **Trigger and trust**: `workflow_run` starts after CI completes, but the deploy job runs only when CI succeeded for a `push` on the repository's own `master` branch. A PR build must not be allowed to deploy its artifact.
 2. **Azure OIDC Login**: It logs in to Azure using OpenID Connect (OIDC) which is a very secure practice because we do not store long-lived credentials.
 3. **SqlPackage Tool**: We install `sqlpackage` using Chocolatey. This command-line utility is what Microsoft provides to publish DACPACs.
 4. **Deploy Script**:
    - We get an access token for database resource (`https://database.windows.net/`).
    - We locate the compiled `.dacpac` file.
    - We execute `SqlPackage.exe` with `/Action:Publish` pointing to our server and database.
-   - **Crucial Setting**: We set `/p:BlockOnPossibleDataLoss=true` to prevent any unintended data loss if a schema change would drop a table or column with data.
+   - **Safety check**: `/p:BlockOnPossibleDataLoss=true` blocks some deployments that could cause data loss; it is **not a substitute** for reviewing the generated deployment script, backups and a rollback plan.
 
 ---
 
 ## Wrap up
 
-With this setup, every time you push code to `master` or merge a Pull Request, GitHub Actions will compile your database schema, ensure there are no syntax errors, and deploy it safely to Azure SQL Database. This is a very clean way to achieve Database DevOps and avoid manual configurations.
+With this setup, pull requests validate the database schema without deploying it. A successful CI run from a trusted push to `master` can promote the DACPAC to Azure SQL, subject to GitHub Environment protections and Azure OIDC trust restrictions. Always review schema changes and keep a database recovery plan before production deployments.
 
 I hope that it could be helpfull, Happy coding!!! 🧑🏻‍💻 😁
 
