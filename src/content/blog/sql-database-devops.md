@@ -156,7 +156,7 @@ jobs:
           repository: ${{ github.repository }}
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
