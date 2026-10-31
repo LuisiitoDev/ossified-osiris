@@ -1,13 +1,64 @@
 ---
 import Layout from '../layouts/BlogPost.astro';
 import ProfileShareCard from '../components/ProfileShareCard.astro';
+
+const priorityCertifications = [
+  {
+    title: 'Azure AI Engineer Associate',
+    issuer: 'Microsoft',
+    focus: 'AI solutions, Azure AI services and applied AI engineering',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/azure-ai-engineer?tab=credentials-tab',
+    linkLabel: 'Verify credential',
+  },
+  {
+    title: 'SQL AI Developer Associate',
+    issuer: 'Microsoft',
+    focus: 'SQL, data engineering and AI-enabled database solutions',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/developing-ai-enabled-database-solutions?tab=credentials-tab',
+    linkLabel: 'Verify credential',
+  },
+  {
+    title: 'GitHub Actions',
+    issuer: 'GitHub',
+    focus: 'Workflow automation, CI/CD and secure delivery pipelines',
+    badge: '/github-actions-cert.svg',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/github-actions?tab=credentials-tab',
+    linkLabel: 'Verify credential',
+  },
+  {
+    title: 'Azure Developer Associate',
+    issuer: 'Microsoft',
+    focus: 'Designing, building and operating cloud applications on Azure',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/88BA7F0EF27D4087?sharingId=4112CC77E15438D0',
+    linkLabel: 'Verify credential',
+  },
+];
+
+const fundamentalsCertifications = [
+  {
+    title: 'Azure AI Fundamentals',
+    issuer: 'Microsoft',
+    badge: '/microsoft-certified-fundamentals.png',
+    url: 'https://www.credly.com/badges/ab6af0d2-9756-425c-b6fc-2589d9a0240f',
+  },
+  {
+    title: 'Azure Fundamentals',
+    issuer: 'Microsoft',
+    badge: '/microsoft-certified-fundamentals.png',
+    url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/6E18A2881646833A?sharingId=4112CC77E15438D0',
+  },
+];
 ---
 
 <Layout
 	isArticle={false}
 	title="About Me"
-	description="Luis Sandoval - Software Engineer from Cartago, Costa Rica"
+	description="About Luis Sandoval: software engineering, .NET, Azure, DevOps, AI and verified technical credentials."
 	pubDate={new Date('December 05 2024')}
+	updatedDate={new Date('October 31 2026')}
 >
 	<!-- Centered Circle Profile Photo -->
 	<div class="flex flex-col items-center justify-center mb-4 -mt-4">
@@ -27,7 +78,7 @@ import ProfileShareCard from '../components/ProfileShareCard.astro';
 	<!-- Introduction Section -->
 	<div class="intro-section mb-10 text-slate-700 dark:text-slate-300">
 		<p class="text-lg leading-relaxed font-normal">
-			👋 Hi! I'm <strong>Luis Sandoval</strong>, a Software Engineer from Cartago, Costa Rica. I'm a self-taught developer and a lifelong learner. I enjoy building software, solving technical challenges, and learning new technologies every day. I created this blog to share my journey, notes, and experiences as a developer.
+			👋 Hi! I'm <strong>Luis Sandoval</strong>, a Software Engineer from Cartago, Costa Rica. I work with <strong>.NET, Azure, cloud architecture, DevOps and AI engineering</strong>. I enjoy connecting software design, automation and practical problem-solving. This blog is where I share what I build, what I learn and the engineering decisions behind it.
 		</p>
 	</div>
 
@@ -118,89 +169,75 @@ import ProfileShareCard from '../components/ProfileShareCard.astro';
 		</div>
 	</div>
 
-	<!-- Certifications Section -->
-	<div class="certifications-section mb-12">
-		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
-			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+	<!-- Certification highlights -->
+	<section class="certifications-section mb-12" aria-labelledby="certifications-heading">
+		<h2 id="certifications-heading" class="text-2xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0110 21a3.745 3.745 0 01-3.296-1.593 3.746 3.746 0 01-3.296-3.296A3.746 3.746 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0114 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 3.296A3.746 3.746 0 0121 12z" />
 			</svg>
-			Official Certifications
+			Certifications & Credentials
 		</h2>
-		
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			{[
-				{
-					title: 'Azure Developer Associate',
-					issuer: 'Microsoft',
-					url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/88BA7F0EF27D4087?sharingId=4112CC77E15438D0',
-					color: 'border-blue-500/20 text-blue-600 dark:text-blue-400 bg-blue-500/5',
-					badge: '/microsoft-certified-associate.png'
-				},
-				{
-					title: 'Azure AI Engineer Associate',
-					issuer: 'Microsoft',
-					url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/azure-ai-engineer?tab=credentials-tab',
-					color: 'border-violet-500/20 text-violet-600 dark:text-violet-400 bg-violet-500/5',
-					badge: '/microsoft-certified-associate.png'
-				},
-				{
-					title: 'SQL AI Developer Associate',
-					issuer: 'Microsoft',
-					url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/developing-ai-enabled-database-solutions?tab=credentials-tab',
-					color: 'border-amber-500/20 text-amber-600 dark:text-amber-400 bg-amber-500/5',
-					badge: '/microsoft-certified-associate.png'
-				},
-				{
-					title: 'Azure AI Fundamentals',
-					issuer: 'Microsoft',
-					url: 'https://www.credly.com/badges/ab6af0d2-9756-425c-b6fc-2589d9a0240f',
-					color: 'border-cyan-500/20 text-cyan-600 dark:text-cyan-400 bg-cyan-500/5',
-					badge: '/microsoft-certified-fundamentals.png'
-				},
-				{
-					title: 'Azure Fundamentals',
-					issuer: 'Microsoft',
-					url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/6E18A2881646833A?sharingId=4112CC77E15438D0',
-					color: 'border-indigo-500/20 text-indigo-600 dark:text-indigo-400 bg-indigo-500/5',
-					badge: '/microsoft-certified-fundamentals.png'
-				},
-				{
-					title: 'GitHub Actions',
-					issuer: 'GitHub',
-					url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/github-actions?tab=credentials-tab',
-					color: 'border-rose-500/20 text-rose-600 dark:text-rose-400 bg-rose-500/5',
-					badge: '/github-actions-cert.svg'
-				}
-			].map((cert) => (
-				<a 
-					href={cert.url} 
-					target="_blank" 
+		<p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-6">
+			Credentials spanning cloud engineering, AI and software delivery. A few that best reflect my technical focus are highlighted below.
+		</p>
+
+		<!-- AZ-400 + Azure Developer Associate prerequisite: expert-level credential. -->
+		<div class="relative overflow-hidden rounded-2xl border border-indigo-400/50 dark:border-indigo-400/35 bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950/60 dark:via-slate-900 dark:to-purple-950/40 p-6 sm:p-8 shadow-sm mb-5">
+			<div class="flex flex-col sm:flex-row gap-5 sm:items-center">
+				<div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20" aria-hidden="true">
+					<span class="font-extrabold text-xl tracking-tight">AZ-400</span>
+				</div>
+				<div class="min-w-0 flex-1">
+					<p class="text-xs font-bold uppercase tracking-widest text-indigo-700 dark:text-indigo-300 mb-2">Expert-level highlight · Microsoft</p>
+					<h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-50 mb-2">DevOps Engineer Expert</h3>
+					<p class="text-sm text-slate-600 dark:text-slate-300 mb-3">
+						Passed AZ-400 in October 2026, building on Azure Developer Associate. Focused on DevOps strategy, CI/CD, infrastructure as code, security and observability.
+					</p>
+					<a href="https://learn.microsoft.com/en-us/credentials/certifications/devops-engineer/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-700 dark:text-indigo-300 underline underline-offset-4 hover:text-indigo-900 dark:hover:text-indigo-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+						About this Microsoft certification <span aria-hidden="true">↗</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">Key certifications</h3>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+			{priorityCertifications.map((cert) => (
+				<a
+					href={cert.url}
+					target="_blank"
 					rel="noopener noreferrer"
-					class={`group flex items-center gap-3.5 sm:gap-5 p-4 sm:p-5 rounded-xl border ${cert.color} hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none`}
+					aria-label={`${cert.title} — ${cert.linkLabel}`}
+					class="group flex items-start gap-4 rounded-xl border border-indigo-500/20 dark:border-indigo-400/20 bg-indigo-500/[0.035] dark:bg-indigo-400/[0.045] p-4 sm:p-5 hover:border-indigo-500/50 hover:shadow-md transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
 				>
-					<img 
-						src={cert.badge} 
-						alt={`${cert.title} Badge`} 
-						class="w-16 h-16 object-contain flex-shrink-0 group-hover:scale-105 transition-transform duration-300"
-					/>
-					<div class="flex-1 flex flex-col justify-between">
-						<div>
-							<div class="flex items-center justify-between mb-1">
-								<span class="text-xs font-semibold uppercase tracking-wider opacity-75">{cert.issuer}</span>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-								</svg>
-							</div>
-							<h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors leading-snug">
-								{cert.title}
-							</h3>
-						</div>
-						<span class="text-xs underline font-medium mt-2.5 select-none opacity-80 group-hover:opacity-100">Verify Credential</span>
+					<img src={cert.badge} width="64" height="64" alt="" loading="lazy" decoding="async" class="w-16 h-16 object-contain shrink-0" />
+					<div class="min-w-0">
+						<span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">{cert.issuer}</span>
+						<h4 class="text-base font-bold text-slate-900 dark:text-slate-50 mt-1 mb-1">{cert.title}</h4>
+						<p class="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300 mb-2">{cert.focus}</p>
+						<span class="text-xs font-semibold underline underline-offset-4 text-indigo-700 dark:text-indigo-300">{cert.linkLabel}</span>
 					</div>
 				</a>
 			))}
 		</div>
-	</div>
+
+		<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">Additional certifications</h3>
+		<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+			{fundamentalsCertifications.map((cert) => (
+				<li>
+					<a href={cert.url} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-700 p-3 hover:border-indigo-500/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+						<img src={cert.badge} width="48" height="48" alt="" loading="lazy" decoding="async" class="h-12 w-12 object-contain shrink-0" />
+						<span class="flex-1 min-w-0">
+							<span class="block text-sm font-bold text-slate-800 dark:text-slate-100">{cert.title}</span>
+							<span class="block text-xs text-slate-500 dark:text-slate-400">{cert.issuer} · Verify credential</span>
+						</span>
+					</a>
+				</li>
+			))}
+		</ul>
+
+
+	</section>
 
 	<!-- GitHub Spotlight Section -->
 	<div class="github-section mb-6">
