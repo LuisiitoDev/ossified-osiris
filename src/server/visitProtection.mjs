@@ -7,7 +7,8 @@ import { counterKey, normalizeSlug, configFor, redisCommand, ensureMigration } f
  * Keys are time-limited. The global counter key is deliberately unchanged.
  */
 const COOKIE_NAME = 'ldv_visitor';
-const COOKIE_MAX_AGE = 365 * 24 * 60 * 60;
+// Keep the pseudonymous cookie only as long as the deduplication window.
+const COOKIE_MAX_AGE = 24 * 60 * 60;
 export const VIEW_DEDUP_SECONDS = 24 * 60 * 60;
 export const RATE_WINDOW_SECONDS = 60 * 60;
 export const IP_VIEW_LIMIT = 90;
