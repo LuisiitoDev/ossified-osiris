@@ -1,0 +1,33 @@
+---
+import { getTocHeadings, showTableOfContents } from '../utils/tableOfContents.mjs';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  headings?: Heading[];
+}
+const { headings = [] } = Astro.props;
+const items = getTocHeadings(headings);
+const visible = showTableOfContents(headings);
+---
+
+{visible && (
+  <nav aria-label="Table of contents" class="mb-9 rounded-xl border border-indigo-500/15 bg-indigo-500/[0.035] dark:bg-indigo-400/[0.06] px-5 py-4">
+    <h2 class="text-base font-bold text-slate-900 dark:text-slate-50 mb-3">On this page</h2>
+    <ol class="m-0 list-none p-0 space-y-2 text-sm leading-snug">
+      {items.map((heading) => (
+        <li class:list={['m-0', { 'pl-4': heading.depth === 3 }]}>
+          <a
+            href={`#${heading.slug}`}
+            class="toc-link inline-block rounded-sm py-0.5 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
