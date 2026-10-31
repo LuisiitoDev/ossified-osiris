@@ -1,8 +1,10 @@
 ---
 title: 'Redis.cs'
-description: 'Redis.StringGet("Developer");'
+description: 'Guía práctica de Azure Cache for Redis con C#: crea el recurso en Azure y aprende a leer y escribir datos desde una aplicación .NET.'
 pubDate: '2022-08-22'
 heroImage: '/img/Redis/Redis.png'
+tags: ['redis', 'azure', 'csharp', 'dotnet']
+lang: 'es'
 ---
 
 <h2 align="center">
