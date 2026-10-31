@@ -71,7 +71,7 @@ The repository includes a Netlify deployment badge. The Astro build command is `
 
 Local PNG/JPEG/WebP images use responsive Netlify Image CDN URLs on builds with `NETLIFY=true`. Source files in `public/` are kept unchanged, including for canonical public URLs and social sharing. Regular `npm run dev` uses original assets. Review Netlify Deploy Preview for image correctness and inspect usage/billing when enabling transformations.
 
-The view counter uses `netlify/functions/counter.js`. Set `COUNTER_API_WORKSPACE` and `COUNTER_API_TOKEN` in Netlify environment settings, **never in committed files**. Refer to `.env.example` and run `netlify dev` when testing serverless functions locally.
+The visitor counter uses `netlify/functions/counter.js` and **persistent Upstash Redis** (recommended) with atomic increments. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as Netlify environment variables, **never in the repository**. Without these two variables, the function continues using the existing CounterAPI v2 integration. See [Visitor counter configuration](#visitor-counter-configuration) below.
 
 ## Validation
 
@@ -107,3 +107,26 @@ node scripts/validate-internal-links.mjs
 
 The checks have fixture-based regression tests in
 `scripts/validate-internal-links.test.mjs`.
+
+## Visitor counter configuration
+
+Counters are keyed by a stable, normalized article slug (`luisiitodev:views:v1:<slug>`).
+The Netlify Function runs server-side and keeps provider tokens secret:
+
+- `GET /api/counter/<slug>` reads the current global total. Missing Redis keys represent zero new visits.
+- `POST /api/counter/<slug>` increments **atomically** via Redis `INCR` and returns the new total.
+- Responses are `Cache-Control: no-store`. Errors produce `503`, and the UI displays `— views`, never an invented total.
+- These are **page views**, not verified unique visitors. Repeated reloads can count again, and public counters can be abused. Do not use the numbers as a billing or security metric.
+
+### Configure persistent storage
+
+1. Create a **persistent** Redis database on [Upstash](https://console.upstash.com/), not a short-lived trial database. Confirm your plan's pricing and requests quota.
+2. In the Netlify site configuration, set both `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` for **Functions** in the desired production deployment context. Redeploy the site.
+3. Run `netlify dev` locally with a private `.env` to test. Astro's `npm run dev` alone does not run Netlify Functions.
+4. Visit an article and confirm the count increases. Reload the page and check the count remains stored. Verify the same count in a different browser. Subsequent deploys use the same persistent Redis keys.
+
+**Preserving existing CounterAPI totals:** Keep `COUNTER_API_WORKSPACE` and `COUNTER_API_TOKEN` temporarily, enable `COUNTER_MIGRATE_FROM_COUNTERAPI=true` and redeploy. On the first request for any article, the function reads its old count and initializes the Redis key with atomic `SETNX` (without overwriting any existing Redis value). Visit your previously published articles (or request their GET endpoints) to migrate them. Confirm the totals in Upstash, then remove/disable `COUNTER_MIGRATE_FROM_COUNTERAPI`. Do **not** delete old CounterAPI data until after verification.
+
+Migration will **not** recover values already missing from CounterAPI. If CounterAPI returns an error or a missing counter for a previously published article, migration fails visibly instead of silently seeding zero. Back up the old counts before cutover if possible. During cutover, avoid sending writes to the old provider from a second active deployment, otherwise any late writes after the snapshot are not transferred.
+
+**Important:** A partial configuration does not silently switch to CounterAPI. If Redis is configured but inaccessible, the UI shows unavailable and Netlify logs a diagnostic; correcting provider permissions/connectivity is required.
