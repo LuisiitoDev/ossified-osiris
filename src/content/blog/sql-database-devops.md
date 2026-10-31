@@ -134,8 +134,8 @@ permissions:
   id-token: write
 
 jobs:
-  deploy-development:
-    name: Deploy to Development
+  deploy-production:
+    name: Deploy to Production
     runs-on: windows-latest
     if: >-
       ${{
@@ -144,7 +144,7 @@ jobs:
         github.event.workflow_run.head_branch == 'master' &&
         github.event.workflow_run.head_repository.full_name == github.repository
       }}
-    environment: Development
+    environment: Production
     
     steps:
       - name: Download DACPAC Artifact
@@ -156,7 +156,7 @@ jobs:
           repository: ${{ github.repository }}
 
       - name: Azure Login
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -165,7 +165,7 @@ jobs:
       - name: Install SqlPackage
         run: choco install sqlpackage -y
 
-      - name: Deploy to Development
+      - name: Deploy to Production
         shell: pwsh
         run: |
           # Get access token for Azure SQL
