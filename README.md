@@ -157,3 +157,28 @@ apply to Upstash-backed writes. The original CounterAPI fallback remains
 available for read compatibility but protected POST requires Redis.
 
 Run regression tests with `node --test scripts/viewProtection.test.mjs`.
+
+## Accessibility baseline
+
+The blog includes a visible-on-focus **Skip to main content** link on every page.
+The primary navigation has an explicit accessible name. The dark-mode toggle
+uses `aria-pressed` to communicate its current state.
+
+After the Astro build, GitHub Actions runs a zero-dependency accessibility
+**smoke check**:
+
+```bash
+node scripts/a11y-smoke.mjs dist
+node --test scripts/a11y-smoke.test.mjs
+```
+
+This checks generated HTML for a language declaration, a meaningful page title,
+exactly one main landmark, a working skip link, the presence of `alt` attributes
+on images (including intentionally empty `alt=""` for decorative images), and
+labels for text inputs. It reports the exact generated page on failure.
+
+**Limitations:** This is NOT a full WCAG audit. It does not assess the quality of
+image descriptions, contrast, focus visibility, screen-reader behavior,
+keyboard operation of interactive widgets, or dynamic DOM changes. Perform
+manual keyboard/screen-reader review and use browser-based tools such as axe
+and Lighthouse accessibility for those checks before claiming compliance.
