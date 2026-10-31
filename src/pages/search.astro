@@ -91,10 +91,7 @@ const posts = (await getCollection('blog')).sort(
       </noscript>
     </main>
     <Footer />
-  </body>
-</html>
-
-<script>
+  <script>
   import { rankArticles } from '../utils/searchArticles.mjs';
 
   function initArticleSearch() {
@@ -133,3 +130,5 @@ const posts = (await getCollection('blog')).sort(
   initArticleSearch();
   document.addEventListener('astro:page-load', initArticleSearch);
 </script>
+  </body>
+</html>
