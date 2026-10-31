@@ -20,7 +20,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Test Markdown image defaults
-        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs scripts/searchArticles.test.mjs scripts/technicalPosts.test.mjs scripts/counterStore.test.mjs scripts/viewProtection.test.mjs scripts/validate-internal-links.test.mjs
+        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs scripts/searchArticles.test.mjs scripts/technicalPosts.test.mjs scripts/counterStore.test.mjs scripts/viewProtection.test.mjs scripts/validate-internal-links.test.mjs scripts/a11y-smoke.test.mjs
       - name: Build using Netlify image delivery settings
         run: NETLIFY=true npm run build
       - name: Verify RSS and sitemap are generated
@@ -36,6 +36,8 @@ jobs:
           grep -R -q '/.netlify/images' dist
       - name: Validate generated links and images
         run: node scripts/validate-internal-links.mjs
+      - name: Check generated HTML accessibility baseline
+        run: node scripts/a11y-smoke.mjs
       - name: Verify localized Spanish article metadata
         run: |
           grep -R -q 'lang="es"' dist
