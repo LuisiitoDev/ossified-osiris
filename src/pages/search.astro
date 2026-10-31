@@ -21,7 +21,7 @@ const posts = (await getCollection('blog')).sort(
   </head>
   <body class="transition-colors duration-300">
     <Header />
-    <main class="mx-auto min-h-[65vh] max-w-4xl px-4 py-10 sm:py-16">
+    <main id="main-content" tabindex="-1" class="mx-auto min-h-[65vh] max-w-4xl px-4 py-10 sm:py-16">
       <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500 dark:text-slate-400">
         <a href="/" class="hover:underline">Home</a>
         <span aria-hidden="true"> / </span>
