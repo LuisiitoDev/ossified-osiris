@@ -1,0 +1,114 @@
+<script>
+  import { getCodeText } from '../utils/copyCode.mjs';
+
+  function enhanceCodeBlocks() {
+    const blocks = document.querySelectorAll<HTMLPreElement>('#article-content pre');
+
+    for (const pre of blocks) {
+      if (pre.closest('.code-copy-container')) continue;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-copy-container';
+      pre.before(wrapper);
+      wrapper.append(pre);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy-button';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+      button.title = 'Copy code to clipboard';
+
+      const status = document.createElement('span');
+      status.className = 'sr-only';
+      status.setAttribute('role', 'status');
+      status.setAttribute('aria-live', 'polite');
+      wrapper.append(button, status);
+
+      let resetTimer: number | undefined;
+      button.addEventListener('click', async () => {
+        const text = getCodeText(pre);
+        if (!text) {
+          status.textContent = 'This code block is empty';
+          return;
+        }
+        try {
+          if (!navigator.clipboard?.writeText) {
+            throw new Error('Clipboard API unavailable');
+          }
+          await navigator.clipboard.writeText(text);
+          button.textContent = 'Copied!';
+          button.setAttribute('aria-label', 'Code copied');
+          status.textContent = 'Code copied to clipboard';
+        } catch {
+          button.textContent = 'Try again';
+          button.setAttribute('aria-label', 'Unable to copy code, try again');
+          status.textContent = 'Could not copy code to clipboard';
+        }
+        if (resetTimer) window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          button.textContent = 'Copy';
+          button.setAttribute('aria-label', 'Copy code to clipboard');
+          status.textContent = '';
+        }, 2200);
+      });
+    }
+  }
+
+  enhanceCodeBlocks();
+  document.addEventListener('astro:page-load', enhanceCodeBlocks);
+</script>
+
+<style is:global>
+  #article-content .code-copy-container {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    margin: 1.5rem 0;
+  }
+
+  #article-content .code-copy-container pre {
+    margin: 0;
+    padding-top: 3.65rem;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  #article-content .code-copy-button {
+    position: absolute;
+    z-index: 1;
+    top: 0.65rem;
+    right: 0.7rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    border-radius: 0.5rem;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  html.dark #article-content .code-copy-button {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: rgba(148, 163, 184, 0.4);
+  }
+
+  #article-content .code-copy-button:hover {
+    border-color: #6366f1;
+  }
+
+  #article-content .code-copy-button:focus-visible {
+    outline: 3px solid #818cf8;
+    outline-offset: 3px;
+  }
+
+  @media print {
+    #article-content .code-copy-button {
+      display: none;
+    }
+  }
+</style>
