@@ -20,7 +20,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Test Markdown image defaults
-        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs scripts/searchArticles.test.mjs scripts/technicalPosts.test.mjs scripts/counterStore.test.mjs scripts/viewProtection.test.mjs scripts/validate-internal-links.test.mjs scripts/a11y-smoke.test.mjs
+        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs scripts/tableOfContents.test.mjs scripts/copyCode.test.mjs scripts/searchArticles.test.mjs scripts/technicalPosts.test.mjs scripts/counterStore.test.mjs scripts/viewProtection.test.mjs scripts/validate-internal-links.test.mjs scripts/a11y-smoke.test.mjs scripts/aboutCredentials.test.mjs
       - name: Build using Netlify image delivery settings
         run: NETLIFY=true npm run build
       - name: Verify RSS and sitemap are generated
