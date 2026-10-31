@@ -50,7 +50,8 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 
 			<!-- Compact, keyboard-accessible topic dropdown with crawlable links. -->
 			{topics.length > 0 && (
-				<div class="relative z-30 mb-8 w-full sm:w-72">
+				<div class="relative z-30 mb-8 flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-start">
+					<div class="relative w-full shrink-0 sm:w-72">
 					<details class="topic-dropdown relative">
 						<summary class="flex w-full cursor-pointer list-none items-center justify-between gap-3 rounded-xl border border-slate-300 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:border-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:border-indigo-400">
 							<span>Browse topics</span>
@@ -65,6 +66,12 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 							))}
 						</nav>
 					</details>
+					</div>
+					<form action="/search/" method="get" role="search" class="flex w-full items-center gap-2 sm:max-w-lg">
+						<label for="home-search-query" class="sr-only">Search blog articles</label>
+						<input id="home-search-query" type="search" name="q" maxlength="120" placeholder="Search articles..." class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white/70 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100" />
+						<button type="submit" class="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Search</button>
+					</form>
 				</div>
 			)}
 			<!-- Blog Section -->
