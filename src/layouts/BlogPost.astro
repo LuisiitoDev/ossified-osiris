@@ -8,6 +8,7 @@ import SocialShare from '../components/SocialShare.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import TableOfContents from '../components/TableOfContents.astro';
+import CodeCopy from '../components/CodeCopy.astro';
 import { responsiveImageAttributes } from '../utils/imageCdn.mjs';
 
 type Props = CollectionEntry<'blog'>['data'] & { isArticle?: boolean; postId?: string; headings?: { depth: number; slug: string; text: string }[] };
@@ -124,6 +125,7 @@ const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 				{isArticle && postId && <RelatedPosts currentId={postId} tags={tags} />}
 			</article>
 		</main>
+		<CodeCopy />
 		<Footer />
 	</body>
 </html>
