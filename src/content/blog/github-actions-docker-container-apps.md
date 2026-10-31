@@ -2,9 +2,12 @@
 title: 'React + Docker + GitHub Actions'
 description: 'Building a React app into a Docker image, publishing it to GitHub Container Registry and deploying it to Azure Container Apps.'
 pubDate: 'Aug 10 2026'
+updatedDate: 'Oct 31 2026'
 heroImage: '/img/GitHubActionsDocker/hero.png'
 tags: ['github-actions', 'docker', 'ghcr', 'azure', 'react']
 ---
+
+> **Security and correctness update (October 2026):** A `workflow_run` deployment has privileged access and must reject CI runs originating from pull requests or untrusted repositories. The examples below now build on PRs **and** pushes to `main`, but only release a successful trusted `push`. The Docker port has also been aligned with nginx (8080). A commit-SHA **tag improves traceability but is not inherently immutable**; pin a container **digest** when immutability matters. See [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use) and [OIDC environment protections](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-cloud-providers).
 
 <h2 align="center">
     From Push to Production with GitHub Actions, Docker and GHCR
@@ -34,7 +37,7 @@ The application is intentionally simple, because the interesting part of this po
 
 ![Deployment pipeline: React build, GitHub Actions, Docker image, GHCR and Azure Container Apps](/img/GitHubActionsDocker/pipeline.png)
 
-Something important before we start: in this pipeline **the image is the artifact**. The CI validates our source code, but what we deploy is an image tagged with the commit SHA, so we always know exactly what is running in production.
+Something important before we start: in this pipeline **the image is the artifact**. The CI validates our source code, but what we deploy is an image tagged with the commit SHA, so we can trace the intended source revision. A SHA-based tag can still be moved, so for guaranteed artifact identity use an image digest.
 
 ---
 
@@ -62,10 +65,10 @@ FROM nginx:1.27-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 http://localhost/ || exit 1
+    CMD wget --quiet --tries=1 http://localhost:8080/health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
 ```
@@ -122,7 +125,7 @@ Notice that nginx is listening in the port **8080** and not in the 80. This is o
 
 ## Continuous Integration
 
-The CI workflow is our gatekeeper. It runs on every Pull Request against `main` and it does not build any image, it only validates that the code is healthy:
+The CI workflow is our gatekeeper. It runs on every Pull Request against `main` **and on trusted pushes to `main`**. It does not build an image; it validates that the code is healthy. CD should deploy only after the push-triggered run succeeds:
 
 ```yaml
 name: CI
@@ -131,6 +134,8 @@ run-name: CI Rick And Morty
 
 on:
   pull_request:
+    branches: [main]
+  push:
     branches: [main]
 
   workflow_dispatch:
@@ -168,7 +173,7 @@ Nothing fancy here: linter, tests with Vitest, and a build to be sure that TypeS
 
 ## Continuous Deployment
 
-Now the fun part! Our CD workflow is triggered with `workflow_run`, this means it only starts when the CI has finished, and it only continues if the CI finished **successfully**:
+Now the fun part! CD is triggered with `workflow_run`, but **a successful conclusion alone is not enough to authorize production deployment**. We must verify that CI came from a trusted `push` to the repository's `main` branch:
 
 ```yaml
 name: CD
@@ -180,6 +185,7 @@ on:
     workflows: ["CI"]
     types:
       - completed
+    branches: [main]
 
 permissions:
   id-token: write
@@ -204,7 +210,13 @@ jobs:
   publish:
     name: Publish Image
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    if: >-
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository
+      }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -244,13 +256,13 @@ jobs:
 
 Let's see some details of this job that I really like.
 
-The first one is the checkout. When a workflow is triggered by `workflow_run`, by default it checks out the default branch, and that branch could have new commits already. Using `ref: ${{ github.event.workflow_run.head_sha }}` we guarantee that our image contains exactly the code that passed the CI.
+The first one is the checkout. When a workflow is triggered by `workflow_run`, by default it checks out the default branch, and that branch could have new commits already. Using `ref: ${{ github.event.workflow_run.head_sha }}` selects the commit that was tested by CI. **Only do this after restricting the privileged publish job to trusted runs**; never check out arbitrary PR code with production credentials.
 
 The second one is the authentication against GHCR. We do not need to create a Personal Access Token, the automatic `secrets.GITHUB_TOKEN` is enough as long as we declared `packages: write` in the permissions. Very comfortable.
 
 The third one took me a while to figure out the first time: the expression `${IMAGE_NAME,,}`. This is a Bash parameter expansion that converts the string to lowercase, and it is necessary because the container registries only accept lowercase repository names, but my GitHub user is `LuisiitoDev` with capital letters. Without this the push fails with a very confusing error, so be careful with this one!
 
-Also we are pushing two tags. The `:latest` tag is comfortable for us the humans, but the tag with the commit SHA is the one that we really deploy, because it is immutable and we can trace it. And the label `org.opencontainers.image.source` is what links the package in GHCR with our repository, so the package page shows the README and it inherits the visibility of the repo.
+Also we are pushing two tags. The `:latest` tag is comfortable for us the humans, but the tag with the commit SHA is the one that we really deploy, because it helps us trace the commit that produced the image. **A tag is mutable**, even when named after a commit SHA. Deploy by an OCI digest (for example, `ghcr.io/owner/image@sha256:...`) when you need to pin the exact published image. And the label `org.opencontainers.image.source` is what links the package in GHCR with our repository, so the package page shows the README and it inherits the visibility of the repo.
 
 Finally, with `cache-from: type=gha` and `cache-to: type=gha,mode=max` the Docker layers are stored in the GitHub Actions cache, so that layer of `npm ci` that we talked about is reused between runs.
 
@@ -263,7 +275,7 @@ Finally, with `cache-from: type=gha` and `cache-to: type=gha,mode=max` the Docke
     needs: publish
     steps:
       - name: Log in to Azure using OIDC
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ env.AZURE_CLIENT_ID }}
           tenant-id: ${{ env.AZURE_TENANT_ID }}
@@ -400,7 +412,7 @@ The first time I configured this pipeline everything was green and my applicatio
 
 ## Wrap up
 
-With this setup the complete trip from a Pull Request to production is automated: the CI validates our code, Docker packages it into a small nginx image, GHCR stores it tagged with the commit SHA, and Azure Container Apps runs it behind HTTPS with scale to zero. And the only credentials involved are short lived OIDC tokens.
+With this setup, a Pull Request runs CI without production access. After approved changes land on `main`, the trusted push triggers CI and a successful run can publish and deploy the image to Azure Container Apps. GHCR stores the image with a commit-SHA tag for traceability; production should use a digest when pinning immutable content. Configure protected deployment environments and narrowly scoped Azure OIDC federation.
 
 And the best part is that this pattern is not something only for React, if we change the Dockerfile the same pipeline deploys an API, a worker, or whatever we can put inside a container.
 
