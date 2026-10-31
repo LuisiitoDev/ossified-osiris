@@ -182,3 +182,38 @@ image descriptions, contrast, focus visibility, screen-reader behavior,
 keyboard operation of interactive widgets, or dynamic DOM changes. Perform
 manual keyboard/screen-reader review and use browser-based tools such as axe
 and Lighthouse accessibility for those checks before claiming compliance.
+
+## Lighthouse CI on pull requests
+
+Every PR targeting `master` starts a dedicated [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) workflow alongside the existing build and unit tests:
+
+1. The workflow waits until Netlify reports a **successful Deploy Preview status for the PR head commit**, then verifies that the preview About page is responding. A pending or failed deploy is not mistaken for a ready website.
+2. Lighthouse audits the **actual Netlify preview** on mobile settings, including responsive **Netlify Image CDN** transformations that a plain local static server cannot reproduce. It checks three representative pages: `/`, `/about` and `/mcp`.
+3. Each page is measured twice and the representative scores for **performance, accessibility, best practices and SEO** are added to the GitHub Actions job summary.
+4. Detailed HTML/JSON reports are saved under the `lighthouse-reports-pr-<number>` workflow artifact (14-day retention). Reports are kept in GitHub Actions instead of being uploaded to a public Lighthouse CI storage service.
+
+### Initial score thresholds (advisory)
+
+| Category | Warning threshold |
+| --- | ---: |
+| Performance | 70 |
+| Accessibility | 85 |
+| Best practices | 80 |
+| SEO | 80 |
+
+Thresholds are expressed on a 0–100 scale. These are **warnings**, not merge gates, because mobile synthetic results vary with the hosted network and CI environment. Failure to collect results or failure to load the correct preview still fails the workflow. After several representative PRs, calibrate baselines before turning stable thresholds into enforced errors.
+
+The preview is public, and Lighthouse may interact with the blog's page-view counter while loading articles. It does not execute privileged admin actions. Avoid adding private URLs or authenticated pages to the collection.
+
+### Reproduce locally
+
+This setup intentionally targets a **deployed Netlify PR Preview** rather than a local static build. To run it yourself for a PR that is already deployed, set `LHCI_PR_NUMBER` and execute:
+
+```bash
+npx --yes @lhci/cli@0.15.1 autorun --config=./lighthouserc.cjs
+node scripts/summarizeLighthouse.mjs
+```
+
+You need Chrome installed. The workflow additionally verifies the Netlify commit status first. The repository contains no Lighthouse reporting credentials.
+
+**Interpretation:** Lighthouse is a lab measurement, not field Core Web Vitals. A passing accessibility score is not WCAG certification, and preview-only indexing directives (if present) can affect its SEO score. For production-level conclusions, also check the published site and real-user metrics.
