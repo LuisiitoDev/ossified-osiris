@@ -10,11 +10,12 @@ interface Props {
 	pubDate?: Date;
 	updatedDate?: Date;
 	isArticle?: boolean;
+	noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg', pubDate, updatedDate, isArticle = false } = Astro.props;
+const { title, description, image = '/blog-placeholder-1.jpg', pubDate, updatedDate, isArticle = false, noindex = false } = Astro.props;
 const fullImageUrl = new URL(image, Astro.site).toString();
 
 // Generate dynamic JSON-LD structured data for search crawlers
@@ -80,7 +81,7 @@ const schema = isArticle
 <meta name="theme-color" content="#000000" />
 
 <!-- SEO / Indexing meta tags -->
-<meta name="robots" content="index, follow" />
+<meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title="LuisiitoDev RSS feed" href="/rss.xml" />
 
