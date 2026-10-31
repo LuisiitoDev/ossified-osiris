@@ -20,9 +20,11 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Test Markdown image defaults
-        run: node --test scripts/rehypeLazyImages.test.mjs
-      - run: npm run build
+        run: node --test scripts/rehypeLazyImages.test.mjs scripts/imageCdn.test.mjs
+      - name: Build using Netlify image delivery settings
+        run: NETLIFY=true npm run build
       - name: Verify RSS and sitemap are generated
         run: |
           test -f dist/rss.xml
           test -f dist/sitemap-index.xml
+          grep -R -q '/.netlify/images' dist

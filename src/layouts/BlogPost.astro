@@ -7,6 +7,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import SocialShare from '../components/SocialShare.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
+import { responsiveImageAttributes } from '../utils/imageCdn.mjs';
 
 type Props = CollectionEntry<'blog'>['data'] & { isArticle?: boolean; postId?: string };
 
@@ -37,7 +38,7 @@ const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 							<img
 								width={302}
 								height={299}
-								src={heroImage}
+								{...responsiveImageAttributes(heroImage, { widths: [320, 640], sizes: "320px" })}
 								alt={title}
 								class="h-auto max-w-[302px] object-contain hover:scale-[1.01] transition-transform duration-500 ease-out"
 							/>
@@ -46,7 +47,7 @@ const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 								<img
 									width={1600}
 									height={520}
-									src={heroImage}
+									{...responsiveImageAttributes(heroImage, { widths: [960, 1600], sizes: "100vw" })}
 									alt={title}
 									class="github-actions-hero-background w-full h-auto object-contain"
 								/>
@@ -62,8 +63,9 @@ const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 							<img
 								width={960}
 								height={480}
-								src={heroImage}
+								{...responsiveImageAttributes(heroImage, { widths: [480, 960, 1440], sizes: "(max-width: 640px) 100vw, 960px" })}
 								alt={title}
+								loading="eager" decoding="async" fetchpriority="high"
 								class="w-full h-[240px] sm:h-[400px] object-cover hover:scale-[1.01] transition-transform duration-500 ease-out"
 							/>
 						)}
