@@ -68,3 +68,17 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+## Image delivery
+
+On Netlify builds (`NETLIFY=true`), local PNG/JPEG images in Markdown posts,
+article heroes and homepage cards use responsive URLs from
+[Netlify Image CDN](https://docs.netlify.com/build/image-cdn/overview/).
+The CDN resizes images and negotiates AVIF/WebP where supported. The original
+assets remain in `public/` for direct links and social previews.
+
+A regular `npm run dev` build keeps the original image URLs. Use `netlify dev`
+to test CDN transformations locally. Review technical diagrams in the Deploy
+Preview before merging. This reduces **delivered image sizes**; it does **not**
+compress or change the Git repository's original binary assets. Monitor usage
+under your Netlify billing plan.
