@@ -38,21 +38,32 @@ const { slug, increment = false } = Astro.props;
 				cleanSlug = cleanSlug.substring(0, 64);
 			}
 
-			try {
-				// Proxied through a Netlify Function (netlify/functions/counter.js) holding the
-				// CounterAPI v2 token, since v2 requires auth and blocks it via CORS from the browser
-				const url = `/api/counter/${cleanSlug}${shouldIncrement ? '?increment=true' : ''}`;
-				const res = await fetch(url);
+			// Protect against duplicate requests on the same rendered element.
+			if (counter.getAttribute('data-loading') === 'true' ||
+				counter.getAttribute('data-loaded') === 'true') continue;
+			counter.setAttribute('data-loading', 'true');
 
-				if (!res.ok) throw new Error('Counter API fetch failed');
+			try {
+				// Same-origin Netlify Function: GET only reads; POST adds one page view.
+				// No API tokens are exposed to the browser.
+				const res = await fetch(`/api/counter/${cleanSlug}`, {
+					method: shouldIncrement ? 'POST' : 'GET',
+					cache: 'no-store',
+					headers: { Accept: 'application/json' },
+				});
+				if (!res.ok) throw new Error('Counter request returned HTTP ' + res.status);
 				const data = await res.json();
-				valueEl.textContent = `${data.count} views`;
-				
-			} catch (e) {
-				console.error(`Failed to fetch views for ${cleanSlug}`, e);
-				
-				// Never display per-device counts as global view counts.
+				if (!Number.isSafeInteger(data?.count) || data.count < 0) {
+					throw new Error('Counter returned an invalid count');
+				}
+				valueEl.textContent = `${data.count.toLocaleString()} views`;
+				counter.setAttribute('data-loaded', 'true');
+			} catch (error) {
+				console.warn('Visit count is unavailable', error);
+				// Never present local values or API failures as a real global count.
 				valueEl.textContent = '— views';
+			} finally {
+				counter.removeAttribute('data-loading');
 			}
 		}
 	};
