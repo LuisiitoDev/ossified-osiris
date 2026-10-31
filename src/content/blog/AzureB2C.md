@@ -2,9 +2,12 @@
 title: 'Azure AD B2C'
 description: 'Configure Azure AD B2C custom authentication policies with Facebook sign-in and a .NET application, including app registrations and Identity Experience Framework.'
 pubDate: 'Oct 20 2022'
+updatedDate: 'Oct 31 2026'
 heroImage: '/img/AzureB2C/active-directory.jpeg'
 tags: ['azure', 'azure-ad-b2c', 'identity', 'authentication']
 ---
+
+> **2026 update — for existing Azure AD B2C customers:** This is a historical walkthrough published in 2022. Since **May 1, 2025**, Azure AD B2C has not been available to purchase for new customers. Existing customers can continue using the service, with Microsoft support committed until at least **May 2030**. For new customer identity projects, consider [Microsoft Entra External ID](https://learn.microsoft.com/en-us/entra/external-id/customers/overview-customers-ciam) instead. Screenshots, UI labels, and configuration steps below reflect the 2022 experience and may differ today. See [Microsoft's Azure AD B2C FAQ](https://learn.microsoft.com/en-us/azure/active-directory-b2c/faq).
 
 <h2 align="center">
     Azure Active Directory B2C: Part I
