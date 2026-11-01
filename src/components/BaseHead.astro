@@ -89,7 +89,7 @@ const schema = isArticle
 <!-- SEO / Indexing meta tags -->
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
 <link rel="sitemap" href="/sitemap-index.xml" />
-<link rel="alternate" type="application/rss+xml" title="LuisiitoDev RSS feed" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title={lang === "es" ? "LuisiitoDev: RSS en español" : "LuisiitoDev RSS feed"} href={lang === "es" ? "/es/rss.xml" : "/rss.xml"} />
 
 <!-- Reciprocal language equivalents only when content exists in both languages. -->
 {alternates && (
