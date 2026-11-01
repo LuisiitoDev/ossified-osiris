@@ -8,7 +8,7 @@ const browser = await chromium.launch({
   headless: true, executablePath: chrome,
   args: ['--no-sandbox', '--disable-dev-shm-usage'],
 });
-const info = {};
+const metadata = {};
 try {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -22,52 +22,34 @@ try {
   await context.addInitScript(() => {
     try { localStorage.setItem('theme', 'dark'); } catch {}
   });
-  for (const [key, route] of [
-    ['home-en', '/'],
-    ['home-es', '/es/'],
-    ['about-en', '/about/'],
+  for (const [key, route, captures] of [
+    ['home-en', '/', [['top',0],['articles',700]]],
+    ['home-es', '/es/', [['top',0],['articles',720]]],
+    ['about-en', '/about/', [['profile',140],['certifications',1940]]],
   ]) {
     const page = await context.newPage();
     const requested = 'https://luisiitodev.com' + route;
     const response = await page.goto(requested, {waitUntil: 'domcontentloaded', timeout: 60000});
     if (!response?.ok()) throw new Error(`HTTP ${response?.status()} on ${requested}`);
-    if (!page.url().startsWith(requested)) throw new Error(`Unexpected redirect: ${page.url()}`);
+    if (new URL(page.url()).origin !== 'https://luisiitodev.com') throw new Error('Unexpected redirect');
     await page.locator('h1').first().waitFor({state: 'visible', timeout: 20000});
     await page.evaluate(async () => {
       await document.fonts.ready;
-      const imgs = [...document.images];
-      await Promise.all(imgs.map(img => {
-        img.loading='eager';
-        return img.decode?.().catch(()=>{}) || Promise.resolve();
-      }));
+      await Promise.all([...document.images].map(img => img.decode?.().catch(()=>{}) ?? Promise.resolve()));
     });
-    await page.waitForTimeout(900);
-    const details = await page.evaluate(() => {
-      const rectOf = el => {
-        if (!el) return null;
-        const r = el.getBoundingClientRect();
-        return { x: r.x+scrollX, y:r.y+scrollY, width:r.width, height:r.height };
-      };
-      const headings = [...document.querySelectorAll('h1,h2,h3,h4')]
-        .map(e => ({text: e.textContent.trim(),rect:rectOf(e)}));
-      return {
-        href: location.href, title: document.title, lang: document.documentElement.lang,
-        deviceCssWidth: innerWidth, documentCssHeight: document.documentElement.scrollHeight,
-        headings,
-        profile: rectOf(document.querySelector('img[alt="Luis Sandoval"]')),
-        certificates: headings.filter(x=>/Certifications|Credentials/i.test(x.text)),
-      };
-    });
-    if ((key==='home-en' && details.lang!=='en') || (key==='home-es' && details.lang!=='es')) {
-      throw new Error(`Unexpected language on ${key}: ${details.lang}`);
+    metadata[key]={url:page.url(),lang:await page.locator('html').getAttribute('lang'),views:{}};
+    for (const [part,y] of captures) {
+      await page.evaluate(y => window.scrollTo({ top:y, left:0, behavior:'instant' }), y);
+      await page.waitForTimeout(600);
+      const state=await page.evaluate(()=>({scrollY,viewportWidth:innerWidth,viewportHeight:innerHeight}));
+      const dest=`linkedin-live-captures/${key}-${part}.png`;
+      await page.screenshot({path:dest,fullPage:false,animations:'disabled'});
+      metadata[key].views[part]={source:dest,...state};
+      console.log(JSON.stringify({part,key,url:page.url(),...state}));
     }
-    const path='linkedin-live-captures/' + key + '-full.png';
-    await page.screenshot({path, fullPage:true, animations:'disabled'});
-    info[key]=details;
-    console.log(JSON.stringify({key,href:details.href,lang:details.lang,height:details.documentCssHeight,headings:details.headings.map(h=>({text:h.text,y:h.rect?.y}))}));
     await page.close();
   }
-  writeFileSync('linkedin-live-captures/metadata.json', JSON.stringify(info,null,2));
+  writeFileSync('linkedin-live-captures/metadata.json', JSON.stringify(metadata,null,2));
 } finally {
   await browser.close();
 }
