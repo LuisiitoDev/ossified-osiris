@@ -14,6 +14,22 @@ export function isLocalRasterImage(src) {
     /\.(?:png|jpe?g|webp)$/i.test(src);
 }
 
+/**
+ * Same-origin, size-bounded image URL for assets used outside <img> srcset,
+ * e.g. an HTML canvas or a CSS background. Local dev retains the original.
+ */
+export function imageCdnUrl(src, {
+  width,
+  quality = 75,
+  enabled = shouldUseImageCdn,
+} = {}) {
+  if (!enabled || !isLocalRasterImage(src) ||
+      !Number.isInteger(width) || width < 1 || width > 4096) return src;
+  const safeQuality = Number.isInteger(quality) && quality >= 1 && quality <= 100
+    ? quality : 75;
+  return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=${safeQuality}`;
+}
+
 export function responsiveImageAttributes(src, {
   widths = [480, 960, 1600],
   sizes = '(max-width: 768px) 100vw, 800px',
@@ -33,8 +49,7 @@ export function responsiveImageAttributes(src, {
   }
 
   const safeQuality = Number.isInteger(quality) && quality >= 1 && quality <= 100 ? quality : 75;
-  const urlFor = (width) =>
-    `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}&q=${safeQuality}`;
+  const urlFor = (width) => imageCdnUrl(src, { width, quality: safeQuality, enabled });
 
   return {
     src: urlFor(validWidths[validWidths.length - 1]),
