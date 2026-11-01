@@ -55,6 +55,11 @@ const enHome = html('/');
 assert.ok(enHome.includes('Latest Publications'), 'English homepage text absent');
 assert.ok(enHome.includes('href="/about/"') || enHome.includes('href="/about"'), 'English About link absent');
 
+const sitemapFiles = readdirSync(dist).filter((file) => file.startsWith('sitemap-') && file.endsWith('.xml'));
+const sitemaps = sitemapFiles.map((file) => readFileSync(join(dist, file), 'utf8')).join('');
+assert.ok(!sitemaps.includes('https://luisiitodev.com/search/'), 'English noindex search found in sitemap');
+assert.ok(!sitemaps.includes('https://luisiitodev.com/es/search/'), 'Spanish noindex search found in sitemap');
+
 const esSearch = html('/es/search/');
 assert.ok(esSearch.includes('Buscar artículos'), 'Spanish search missing');
 assert.ok(!esSearch.includes('hreflang="es"'), 'Noindex search must not claim translation alternate');
