@@ -23,8 +23,8 @@ test('navigation switches to equivalent pages only where true localization exist
   assert.equal(alternateLocaleRoute('/topics/azure/'), '/es/topics/azure/');
   assert.equal(alternateLocaleRoute('/es/topics/azure/'), '/topics/azure/');
   assert.equal(alternateLocaleRoute('/howigotmygithubactionscert/'), '/es/howigotmygithubactionscert/');
-  assert.equal(alternateLocaleRoute('/mcp/'), '/es/'); // no dishonest article translation
-  assert.equal(articleRoute('mcp', 'es'), '/mcp/');
+  assert.equal(alternateLocaleRoute('/mcp/'), '/es/mcp/');
+  assert.equal(articleRoute('mcp', 'es'), '/es/mcp/');
 });
 
 test('hreflang remains reciprocal and is never published for untranslated posts', () => {
@@ -33,9 +33,9 @@ test('hreflang remains reciprocal and is never published for untranslated posts'
   assert.deepEqual(localizedAlternates('/howigotmygithubactionscert/'), {
     en: '/howigotmygithubactionscert/', es: '/es/howigotmygithubactionscert/',
   });
-  assert.equal(localizedAlternates('/mcp/'), null);
+  assert.deepEqual(localizedAlternates('/mcp/'), { en: '/mcp/', es: '/es/mcp/' });
   assert.equal(localizedAlternates('/es/search/'), null);
-  assert.equal(translatedArticleSlugs.size, 4);
+  assert.equal(translatedArticleSlugs.size, 6);
   assert.match(read('../src/components/BaseHead.astro'), /hreflang="x-default"/);
 });
 
