@@ -35,7 +35,7 @@ test('hreflang remains reciprocal and is never published for untranslated posts'
   });
   assert.equal(localizedAlternates('/mcp/'), null);
   assert.equal(localizedAlternates('/es/search/'), null);
-  assert.equal(translatedArticleSlugs.size, 1);
+  assert.equal(translatedArticleSlugs.size, 4);
   assert.match(read('../src/components/BaseHead.astro'), /hreflang="x-default"/);
 });
 
