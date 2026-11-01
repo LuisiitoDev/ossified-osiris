@@ -12,6 +12,6 @@ import rehypeLazyImages from './src/plugins/rehypeLazyImages.mjs';
 export default defineConfig({
     site: 'https://luisiitodev.com',
     i18n: { defaultLocale: 'en', locales: ['en', 'es'], routing: { prefixDefaultLocale: false } },
-    integrations: [mdx(), sitemap({ filter: (page) => !/^\/search\/?$/.test(new URL(page).pathname) }), react(), tailwind()],
+    integrations: [mdx(), sitemap({ filter: (page) => !/^\/(?:es\/)?search\/?$/.test(new URL(page).pathname) }), react(), tailwind()],
     markdown: { rehypePlugins: [rehypeLazyImages] },
 });
