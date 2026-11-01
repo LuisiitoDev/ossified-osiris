@@ -33,10 +33,8 @@ try {
     if (!response?.ok()) throw new Error(`HTTP ${response?.status()} on ${requested}`);
     if (new URL(page.url()).origin !== 'https://luisiitodev.com') throw new Error('Unexpected redirect');
     await page.locator('h1').first().waitFor({state: 'visible', timeout: 20000});
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-      await Promise.all([...document.images].map(img => img.decode?.().catch(()=>{}) ?? Promise.resolve()));
-    });
+    // Do not wait for all lazy below-fold images. Some never load while offscreen.
+    await Promise.race([page.evaluate(() => document.fonts.ready), page.waitForTimeout(5000)]);
     metadata[key]={url:page.url(),lang:await page.locator('html').getAttribute('lang'),views:{}};
     for (const [part,y] of captures) {
       await page.evaluate(y => window.scrollTo({ top:y, left:0, behavior:'instant' }), y);
