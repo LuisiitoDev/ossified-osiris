@@ -93,7 +93,7 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 								<div class="lg:col-span-7 overflow-hidden h-[240px] sm:h-[360px] lg:h-[400px]">
 									<img 
 										{...responsiveImageAttributes(featuredPost.data.heroImage, { widths: [480, 960, 1440], sizes: "(max-width: 1024px) 100vw, 60vw" })} loading="eager" decoding="async" fetchpriority="high" width="1200" height="630" 
-										alt={spanishListing(featuredPost).title}{(!spanishListing(featuredPost).hasSpanishArticle && featuredPost.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
+										alt={spanishListing(featuredPost).title}
 										class="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-500 ease-out"
 									/>
 								</div>
@@ -103,7 +103,7 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 											ARTÍCULO DESTACADO
 										</span>
 										<h3 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-3 leading-snug">
-											{spanishListing(featuredPost).title}
+											{spanishListing(featuredPost).title}{(!spanishListing(featuredPost).hasSpanishArticle && featuredPost.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
 										</h3>
 										<p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 line-clamp-3 mb-4 leading-relaxed">
 											{spanishListing(featuredPost).description}
@@ -128,13 +128,13 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 									<div class="overflow-hidden h-[200px] sm:h-[240px]">
 										<img 
 											{...responsiveImageAttributes(post.data.heroImage, { widths: [400, 800, 1200], sizes: "(max-width: 768px) 100vw, 50vw" })} loading="lazy" decoding="async" width="800" height="450" 
-											alt={spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
+											alt={spanishListing(post).title}
 											class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 ease-out"
 										/>
 									</div>
 									<div class="p-6">
 										<h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-2 line-clamp-2 leading-snug">
-											{spanishListing(post).title}
+											{spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
 										</h3>
 										<p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
 											{spanishListing(post).description}
