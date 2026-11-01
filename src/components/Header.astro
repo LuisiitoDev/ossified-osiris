@@ -1,21 +1,25 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
+import { localeFromPath, alternateLocaleRoute, localeRoute, labels } from '../utils/i18n.mjs';
+const locale = localeFromPath(Astro.url.pathname);
+const t = labels[locale];
+const alternate = alternateLocaleRoute(Astro.url.pathname);
 ---
 
-<a class="skip-to-main" href="#main-content">Skip to main content</a>
+<a class="skip-to-main" href="#main-content">{t.skip}</a>
 <header class="sticky top-0 z-50 transition-colors duration-300">
-	<nav aria-label="Main navigation" class="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
+	<nav aria-label={t.navigation} class="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
 		<h2 class="text-xl font-bold tracking-tight">
-			<a href="/" class="brand-link bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+			<a href={localeRoute("/", locale)} class="brand-link bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
 				{SITE_TITLE}
 			</a>
 		</h2>
 		
 		<div class="flex h-9 items-center gap-3 leading-none sm:gap-6">
 			<div class="internal-links flex items-center gap-1 sm:gap-2">
-				<HeaderLink href="/">Home</HeaderLink>
-				<HeaderLink href="/about">About</HeaderLink>
+				<HeaderLink href={localeRoute("/", locale)}>{t.home}</HeaderLink>
+				<HeaderLink href={localeRoute("/about", locale)}>{t.about}</HeaderLink>
 			</div>
 
 			<div class="social-links hidden items-center gap-2 md:flex">
@@ -37,6 +41,17 @@ import { SITE_TITLE } from '../consts';
 			</div>
 
 			<div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-800"></div>
+
+            <a
+              href={alternate}
+              hreflang={locale === 'en' ? 'es' : 'en'}
+              lang={locale === 'en' ? 'es' : 'en'}
+              aria-label={locale === 'en' ? 'Cambiar a español' : 'Switch to English'}
+              title={locale === 'en' ? 'Ver en español' : 'View in English'}
+              class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:text-slate-200"
+            >
+              {locale === 'en' ? 'ES' : 'EN'}
+            </a>
 
 			<!-- Theme Toggle Button -->
 			<button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Dark mode" aria-pressed="false">
