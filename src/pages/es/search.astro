@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { articleRoute } from '../../utils/i18n.mjs';
+import { spanishListing } from '../../utils/spanishContent.mjs';
+
+const posts = (await getCollection('blog')).filter((post) => !post.id.startsWith('es/')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <BaseHead
+      title="Buscar artículos | LuisiitoDev"
+      description="Encontrá artículos sobre .NET, Azure, GitHub Actions, DevOps e inteligencia artificial."
+      noindex={true}
+      lang="es"
+    />
+  </head>
+  <body class="transition-colors duration-300">
+    <Header />
+    <main id="main-content" tabindex="-1" class="mx-auto min-h-[65vh] max-w-4xl px-4 py-10 sm:py-16">
+      <nav aria-label="Breadcrumb" class="mb-6 text-sm text-slate-500 dark:text-slate-400">
+        <a href="/es/" class="hover:underline">Inicio</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">Buscar</span>
+      </nav>
+
+      <h1 class="mb-3 text-3xl font-extrabold sm:text-4xl">Buscar artículos</h1>
+      <p class="mb-8 text-base text-slate-600 dark:text-slate-300">
+        Buscá por título, descripción o tema. Los resultados se filtran directamente en tu navegador.
+      </p>
+
+      <form id="article-search-form" action="/es/search/" method="get" role="search" class="mb-6 flex flex-col gap-3 sm:flex-row">
+        <label for="article-search-query" class="sr-only">Buscar artículos del blog</label>
+        <input
+          id="article-search-query"
+          type="search"
+          name="q"
+          maxlength="120"
+          placeholder="Probá Azure, MCP, Docker..."
+          autocomplete="off"
+          class="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        />
+        <button type="submit" class="rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+          Buscar
+        </button>
+      </form>
+
+      <p id="search-status" role="status" aria-live="polite" class="mb-5 text-sm text-slate-500 dark:text-slate-400">
+        {posts.length} {posts.length === 1 ? 'artículo' : 'artículos'}
+      </p>
+
+      <ul id="search-results" class="space-y-4">
+        {posts.map((post) => (
+          <li
+            data-article-id={post.id}
+            data-article-title={spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500"> (en inglés)</span>}
+            data-article-description={spanishListing(post).description}
+            data-article-tags={JSON.stringify(post.data.tags)}
+            data-article-date={post.data.pubDate.toISOString()}
+          >
+            <a
+              href={articleRoute(post.id, "es")}
+              class="glass-card group block rounded-xl p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:p-6"
+            >
+              <h2 class="mb-2 text-xl font-bold text-slate-900 group-hover:text-indigo-600 dark:text-slate-50 dark:group-hover:text-indigo-300">
+                {spanishListing(post).title}
+              </h2>
+              <p class="mb-3 text-sm text-slate-600 dark:text-slate-300">{spanishListing(post).description}</p>
+              <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                <FormattedDate date={post.data.pubDate} />
+                {post.data.tags.length > 0 && (
+                  <span>{post.data.tags.slice(0, 3).map((tag) => tag.replace(/-/g, ' ')).join(' · ')}</span>
+                )}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p id="search-empty" hidden class="rounded-xl border border-slate-200 p-6 text-slate-700 dark:border-slate-700 dark:text-slate-300">
+        No se encontraron artículos. Probá con otra palabra clave o explorá todas las publicaciones.
+      </p>
+
+      <noscript>
+        <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">
+          Activá JavaScript para filtrar resultados. Todos los artículos se muestran arriba.
+        </p>
+      </noscript>
+    </main>
+    <Footer />
+  <script>
+  import { rankArticles } from '../../utils/searchArticles.mjs';
+
+  function initArticleSearch() {
+    const form = document.querySelector<HTMLFormElement>('#article-search-form');
+    const input = document.querySelector<HTMLInputElement>('#article-search-query');
+    const list = document.querySelector<HTMLUListElement>('#search-results');
+    const status = document.querySelector<HTMLElement>('#search-status');
+    const empty = document.querySelector<HTMLElement>('#search-empty');
+    if (!form || !input || !list || !status || !empty || form.dataset.initialized === 'true') {
+      return;
+    }
+    form.dataset.initialized = 'true';
+
+    const articles = Array.from(list.querySelectorAll<HTMLLIElement>('li[data-article-id]'))
+      .map((element) => ({
+        id: element.dataset.articleId ?? '',
+        title: element.dataset.articleTitle ?? '',
+        description: element.dataset.articleDescription ?? '',
+        tags: JSON.parse(element.dataset.articleTags ?? '[]') as string[],
+        pubDate: element.dataset.articleDate ?? '',
+        element,
+      }));
+
+    const renderResults = () => {
+      const matches = rankArticles(articles, input.value);
+      list.replaceChildren(...matches.map((match) => match.element));
+      empty.hidden = matches.length !== 0;
+      status.textContent = `${matches.length} ${matches.length === 1 ? 'artículo' : 'artículos'} found`;
+    };
+
+    input.value = (new URLSearchParams(window.location.search).get('q') ?? '').slice(0, 120);
+    renderResults();
+    input.addEventListener('input', renderResults);
+  }
+
+  initArticleSearch();
+  document.addEventListener('astro:page-load', initArticleSearch);
+</script>
+  </body>
+</html>
