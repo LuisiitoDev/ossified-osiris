@@ -35,6 +35,8 @@ jobs:
           fi
           grep -q 'name="robots" content="noindex, follow"' dist/search/index.html
           grep -R -q '/.netlify/images' dist
+      - name: Verify localized English and Spanish generated pages
+        run: node scripts/check-i18n-output.mjs
       - name: Validate generated links and images
         run: node scripts/validate-internal-links.mjs
       - name: Check generated HTML accessibility baseline
