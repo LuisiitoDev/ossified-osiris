@@ -1,0 +1,45 @@
+name: Capture genuine live blog for Instagram
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/capture-live-mobile-once.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser automation (no image generator)
+        run: npm install --prefix /tmp/livecapture --no-save --no-package-lock playwright-core@1.56.1
+
+      - name: Locate GitHub runner Chrome
+        shell: bash
+        run: |
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "Chrome not found"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+
+      - name: Capture actual luisiitodev.com (EN and ES)
+        run: node scripts/capture-live-mobile-once.mjs
+
+      - name: Preserve full-resolution screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: genuine-luisiitodev-mobile-story
+          path: mobile-screenshots/
+          if-no-files-found: error
+          retention-days: 7
