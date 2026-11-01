@@ -1,6 +1,15 @@
 ---
 // ProfileShareCard.astro
 // Interactive component to display and share a digital profile card suitable for stories.
+import { imageCdnUrl, responsiveImageAttributes } from '../utils/imageCdn.mjs';
+
+// The share preview is just 64px. The generated 1080x1920 card draws the
+// avatar at 360x360, so request a 480px rendition for the canvas instead.
+const sharePreviewAvatar = responsiveImageAttributes('/luis-sandoval.png', {
+  widths: [96, 192],
+  sizes: '64px',
+});
+const shareCanvasAvatar = imageCdnUrl('/luis-sandoval.png', { width: 480 });
 ---
 
 <div class="profile-share-wrapper flex flex-col items-center justify-center mb-10">
@@ -42,7 +51,7 @@
 			
 			<!-- Card Visual Preview (Story Aspect 9:16 representation) -->
 			<div class="flex justify-center mb-5 w-full">
-				<div id="html-card-preview" class="w-56 h-[370px] rounded-xl relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl border border-slate-800/80 bg-slate-950 text-white select-none">
+				<div data-avatar-canvas-src={shareCanvasAvatar} id="html-card-preview" class="w-56 h-[370px] rounded-xl relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl border border-slate-800/80 bg-slate-950 text-white select-none">
 					<!-- Background ambient glows -->
 					<div class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/20 rounded-full blur-xl"></div>
 					<div class="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-xl"></div>
@@ -54,8 +63,10 @@
 						<!-- Profile picture inside white border -->
 						<div class="w-16 h-16 rounded-full border-2 border-white overflow-hidden shadow-md mb-2 bg-slate-900">
 							<img 
-								src="/luis-sandoval.png" 
-								alt="Luis Sandoval" 
+								{...sharePreviewAvatar}
+								alt="Luis Sandoval"
+								loading="lazy"
+								decoding="async" 
 								style="width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 9999px !important; margin: 0 !important; max-width: none !important;"
 								class="select-none"
 							/>
@@ -294,7 +305,10 @@
 					resolve(null);
 				};
 
-				img.src = '/luis-sandoval.png';
+				// Read the Astro-rendered same-origin URL. The original PNG remains
+                // as a local-development fallback; don't download 913 KB in Netlify.
+                const preview = document.getElementById('html-card-preview');
+                img.src = preview?.dataset.avatarCanvasSrc || '/luis-sandoval.png';
 			});
 		};
 
