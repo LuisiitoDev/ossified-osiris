@@ -1,0 +1,59 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  statuses: read
+
+concurrency:
+  group: lighthouse-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Audit Netlify preview (mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LHCI_PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate Lighthouse configuration and report scripts
+        run: node --test scripts/lighthouseCI.test.mjs
+
+      - name: Wait for Netlify preview to publish this PR commit
+        run: node scripts/waitForNetlifyPreview.mjs
+
+      - name: Find Chrome binary
+        run: |
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "Google Chrome is not installed on this runner"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+
+      - name: Run Lighthouse (2 mobile runs on Home, About and MCP)
+        run: npx --yes @lhci/cli@0.15.1 autorun --config=./lighthouserc.cjs
+
+      - name: Add Lighthouse scores to GitHub Actions summary
+        run: node scripts/summarizeLighthouse.mjs
+
+      - name: Save detailed Lighthouse HTML and JSON reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports-pr-${{ github.event.pull_request.number }}
+          path: lighthouse-reports/
+          if-no-files-found: warn
+          retention-days: 14
