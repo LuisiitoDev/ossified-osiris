@@ -33,7 +33,7 @@ const label = topic.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpp
         {posts.map((post) => (
           <li>
             <a class="block glass-card rounded-xl p-5 focus-visible:outline-2 focus-visible:outline-indigo-600" href={articleRoute(post.id,"es")}>
-              <h2 class="text-xl mb-2">{spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500"> (en inglés)</span>}</h2>
+              <h2 class="text-xl mb-2">{spanishListing(post).title}{!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es' ? ' (en inglés)' : ''}</h2>
               <p class="text-slate-600 dark:text-slate-300">{spanishListing(post).description}</p>
               <p class="text-sm text-slate-500 mt-3"><FormattedDate date={post.data.pubDate} /></p>
             </a>
