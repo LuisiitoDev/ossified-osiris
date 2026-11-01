@@ -1,0 +1,36 @@
+name: Capture live LinkedIn carousel sources
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/linkedin-live-capture.yml'
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chrome automation
+        run: npm install --prefix /tmp/linkedin-capture --no-package-lock --no-save playwright-core@1.56.1
+      - name: Locate Chrome
+        run: |
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME_BIN"
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+      - name: Capture live site in English, Spanish and About
+        run: node scripts/capture-linkedin-live-once.mjs
+      - name: Archive genuine browser captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-live-browser-captures
+          path: linkedin-live-captures/
+          if-no-files-found: error
+          retention-days: 7
