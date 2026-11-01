@@ -26,6 +26,7 @@ jobs:
       - name: Verify RSS and sitemap are generated
         run: |
           test -f dist/rss.xml
+          test -f dist/es/rss.xml
           test -f dist/sitemap-index.xml
           test -f dist/search/index.html
           if grep -q 'https://luisiitodev.com/search/' dist/sitemap-*.xml; then
