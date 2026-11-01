@@ -111,6 +111,24 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 	
 	// Support Astro view transitions / document load variants
 	document.addEventListener('astro:after-swap', initThemeToggle);
+
+    // Query the current element each time, so Astro page swaps never retain
+    // references to old dropdowns or accumulate event listeners.
+    const dismissMobileMenu = (event: PointerEvent | KeyboardEvent) => {
+      const menu = document.querySelector<HTMLDetailsElement>('header .mobile-menu');
+      if (!menu?.open) return;
+      if (event.type === 'keydown') {
+        if ((event as KeyboardEvent).key === 'Escape') {
+          menu.open = false;
+          menu.querySelector('summary')?.focus();
+        }
+      } else if (!menu.contains(event.target as Node)) {
+        menu.open = false;
+      }
+    };
+
+    document.addEventListener('pointerdown', dismissMobileMenu);
+    document.addEventListener('keydown', dismissMobileMenu);
 </script>
 
 <style>
