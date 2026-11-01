@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import { articleRoute } from '../../../utils/i18n.mjs';
+import { spanishListing } from '../../../utils/spanishContent.mjs';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('blog')).filter(post => !post.id.startsWith('es/'));
+  const topics = [...new Set(posts.flatMap((post) => post.data.tags))];
+  return topics.map((topic) => ({
+    params: { topic },
+    props: { topic, posts: posts.filter((post) => post.data.tags.includes(topic))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()) },
+  }));
+}
+
+const { topic, posts } = Astro.props;
+const label = topic.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+---
+<!doctype html>
+<html lang="es">
+  <head><BaseHead title={`${label} | Artículos de LuisiitoDev`} description={`Read ${label} articles on LuisiitoDev's software engineering blog.`} /></head>
+  <body>
+    <Header />
+    <main id="main-content" tabindex="-1" class="max-w-4xl mx-auto px-4 py-12 min-h-[60vh]">
+      <nav aria-label="Breadcrumb" class="mb-6 text-sm"><a href="/es/">Inicio</a><span aria-hidden="true"> / </span><span>{label}</span></nav>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">{label}</h1>
+      <p class="text-slate-600 dark:text-slate-300 mb-8">{posts.length} {posts.length === 1 ? 'artículo' : 'artículos'} sobre este tema.</p>
+      <ul class="space-y-4">
+        {posts.map((post) => (
+          <li>
+            <a class="block glass-card rounded-xl p-5 focus-visible:outline-2 focus-visible:outline-indigo-600" href={articleRoute(post.id,"es")}>
+              <h2 class="text-xl mb-2">{spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500"> (en inglés)</span>}</h2>
+              <p class="text-slate-600 dark:text-slate-300">{spanishListing(post).description}</p>
+              <p class="text-sm text-slate-500 mt-3"><FormattedDate date={post.data.pubDate} /></p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
+    <Footer />
+  </body>
+</html>
