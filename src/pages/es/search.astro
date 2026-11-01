@@ -60,7 +60,7 @@ const posts = (await getCollection('blog')).filter((post) => !post.id.startsWith
         {posts.map((post) => (
           <li
             data-article-id={post.id}
-            data-article-title={spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500"> (en inglés)</span>}
+            data-article-title={spanishListing(post).title}
             data-article-description={spanishListing(post).description}
             data-article-tags={JSON.stringify(post.data.tags)}
             data-article-date={post.data.pubDate.toISOString()}
@@ -70,7 +70,7 @@ const posts = (await getCollection('blog')).filter((post) => !post.id.startsWith
               class="glass-card group block rounded-xl p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:p-6"
             >
               <h2 class="mb-2 text-xl font-bold text-slate-900 group-hover:text-indigo-600 dark:text-slate-50 dark:group-hover:text-indigo-300">
-                {spanishListing(post).title}
+                {spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
               </h2>
               <p class="mb-3 text-sm text-slate-600 dark:text-slate-300">{spanishListing(post).description}</p>
               <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
@@ -122,7 +122,7 @@ const posts = (await getCollection('blog')).filter((post) => !post.id.startsWith
       const matches = rankArticles(articles, input.value);
       list.replaceChildren(...matches.map((match) => match.element));
       empty.hidden = matches.length !== 0;
-      status.textContent = `${matches.length} ${matches.length === 1 ? 'artículo' : 'artículos'} found`;
+      status.textContent = `${matches.length} ${matches.length === 1 ? 'artículo' : 'artículos'} encontrados`;
     };
 
     input.value = (new URLSearchParams(window.location.search).get('q') ?? '').slice(0, 120);
