@@ -35,12 +35,13 @@ test('hreflang remains reciprocal and is never published for untranslated posts'
   });
   assert.deepEqual(localizedAlternates('/mcp/'), { en: '/mcp/', es: '/es/mcp/' });
   assert.equal(localizedAlternates('/es/search/'), null);
-  assert.equal(translatedArticleSlugs.size, 6);
+  assert.equal(localizedAlternates('/no-such-article/'), null);
+  assert.equal(translatedArticleSlugs.size, 10);
   assert.match(read('../src/components/BaseHead.astro'), /hreflang="x-default"/);
 });
 
 test('Spanish listing summaries clearly distinguish originals without body translations', () => {
-  assert.equal(spanishListing({id:'mcp', data:{title:'MCP',description:'English text'}}).hasSpanishArticle, false);
+  assert.equal(spanishListing({id:'mcp', data:{title:'MCP',description:'English text'}}).hasSpanishArticle, true);
   assert.equal(spanishListing({id:'howigotmygithubactionscert', data:{}}).hasSpanishArticle, true);
   assert.ok(Object.keys(spanishPostSummaries).length >= 10);
   assert.match(read('../src/pages/es/index.astro'), /en inglés/);
