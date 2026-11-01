@@ -1,0 +1,58 @@
+name: Mobile Navbar Browser Check
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'src/components/Header.astro'
+      - 'src/components/HeaderLink.astro'
+      - 'src/styles/global.css'
+      - 'src/utils/i18n.mjs'
+      - 'scripts/check-mobile-navbar-browser.mjs'
+      - '.github/workflows/mobile-nav-ci.yml'
+
+permissions:
+  contents: read
+  statuses: read
+
+concurrency:
+  group: mobile-nav-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  responsive-navbar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      LHCI_PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser driver
+        run: npm install --prefix /tmp/nav-check --no-package-lock --no-save playwright-core@1.56.1
+
+      - name: Verify matching Netlify Deploy Preview is ready
+        run: node scripts/waitForNetlifyPreview.mjs
+
+      - name: Find Chrome
+        run: |
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME_BIN"
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+
+      - name: Test 320, 375, 390, 430, 768px in EN and ES
+        run: node scripts/check-mobile-navbar-browser.mjs
+
+      - name: Upload real browser screenshots and measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-navbar-browser-evidence
+          path: mobile-nav-screenshots/
+          if-no-files-found: warn
+          retention-days: 7

@@ -9,15 +9,15 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 
 <a class="skip-to-main" href="#main-content">{t.skip}</a>
 <header class="sticky top-0 z-50 transition-colors duration-300">
-	<nav aria-label={t.navigation} class="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
-		<h2 class="text-xl font-bold tracking-tight">
+	<nav aria-label={t.navigation} class="relative mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4">
+		<h2 class="m-0 min-w-0 shrink-0 text-xl font-bold tracking-tight">
 			<a href={localeRoute("/", locale)} class="brand-link bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
 				{SITE_TITLE}
 			</a>
 		</h2>
 		
-		<div class="flex h-9 items-center gap-3 leading-none sm:gap-6">
-			<div class="internal-links flex items-center gap-1 sm:gap-2">
+		<div class="flex h-10 shrink-0 items-center gap-1.5 leading-none sm:h-9 sm:gap-6">
+			<div class="internal-links hidden items-center gap-1 sm:flex sm:gap-2">
 				<HeaderLink href={localeRoute("/", locale)}>{t.home}</HeaderLink>
 				<HeaderLink href={localeRoute("/about", locale)}>{t.about}</HeaderLink>
 			</div>
@@ -40,7 +40,7 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 				</a>
 			</div>
 
-			<div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-800"></div>
+			<div class="hidden h-5 w-[1px] bg-slate-200 dark:bg-slate-800 sm:block"></div>
 
             <a
               href={alternate}
@@ -48,7 +48,7 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
               lang={locale === 'en' ? 'es' : 'en'}
               aria-label={locale === 'en' ? 'Cambiar a español' : 'Switch to English'}
               title={locale === 'en' ? 'Ver en español' : 'View in English'}
-              class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-bold text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:text-slate-200"
+              class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-slate-200 px-2 text-xs font-bold text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:text-slate-200"
             >
               {locale === 'en' ? 'ES' : 'EN'}
             </a>
@@ -64,6 +64,26 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 					<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m12.728 0A9 9 0 115.636 5.636 9 9 0 0117.657 5.636z" />
 				</svg>
 			</button>
+
+            <!-- Compact, keyboard-accessible navigation for phones. -->
+            <details class="mobile-menu relative sm:hidden">
+              <summary
+                class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-slate-200 text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-500 dark:border-slate-700 dark:text-slate-200 [&::-webkit-details-marker]:hidden"
+                aria-label={locale === 'es' ? 'Abrir menú de navegación' : 'Open navigation menu'}
+              >
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </summary>
+              <div
+                class="mobile-menu-panel absolute right-0 top-[calc(100%+0.6rem)] z-[60] w-56 max-w-[calc(100vw-1.5rem)] rounded-xl border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-900"
+                role="group"
+                aria-label={t.navigation}
+              >
+                <HeaderLink href={localeRoute("/", locale)}>{t.home}</HeaderLink>
+                <HeaderLink href={localeRoute("/about", locale)}>{t.about}</HeaderLink>
+              </div>
+            </details>
 		</div>
 	</nav>
 </header>
@@ -91,6 +111,24 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 	
 	// Support Astro view transitions / document load variants
 	document.addEventListener('astro:after-swap', initThemeToggle);
+
+    // Query the current element each time, so Astro page swaps never retain
+    // references to old dropdowns or accumulate event listeners.
+    const dismissMobileMenu = (event: PointerEvent | KeyboardEvent) => {
+      const menu = document.querySelector<HTMLDetailsElement>('header .mobile-menu');
+      if (!menu?.open) return;
+      if (event.type === 'keydown') {
+        if ((event as KeyboardEvent).key === 'Escape') {
+          menu.open = false;
+          menu.querySelector('summary')?.focus();
+        }
+      } else if (!menu.contains(event.target as Node)) {
+        menu.open = false;
+      }
+    };
+
+    document.addEventListener('pointerdown', dismissMobileMenu);
+    document.addEventListener('keydown', dismissMobileMenu);
 </script>
 
 <style>
@@ -184,4 +222,30 @@ const alternate = alternateLocaleRoute(Astro.url.pathname);
 		width: 22px;
 		height: 22px;
 	}
+
+  @media (max-width: 639px) {
+    .brand-link {
+      font-size: 1.15rem;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0.4rem;
+    }
+
+    .mobile-menu-panel :global(a) {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0.75rem 0.9rem;
+    }
+
+    .mobile-menu[open] summary {
+      color: rgb(var(--accent));
+      background: rgba(var(--accent), 0.09);
+    }
+  }
 </style>
