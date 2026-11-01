@@ -103,7 +103,7 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 											ARTÍCULO DESTACADO
 										</span>
 										<h3 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-3 leading-snug">
-											{spanishListing(featuredPost).title}{(!spanishListing(featuredPost).hasSpanishArticle && featuredPost.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
+											{spanishListing(featuredPost).title}{!spanishListing(featuredPost).hasSpanishArticle && featuredPost.data.lang !== 'es' ? ' (en inglés)' : ''}
 										</h3>
 										<p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 line-clamp-3 mb-4 leading-relaxed">
 											{spanishListing(featuredPost).description}
@@ -134,7 +134,7 @@ const formatTopic = (tag: string) => tag.replace(/-/g, ' ').replace(/\b\w/g, (le
 									</div>
 									<div class="p-6">
 										<h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-2 line-clamp-2 leading-snug">
-											{spanishListing(post).title}{(!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es') && <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400"> (en inglés)</span>}
+											{spanishListing(post).title}{!spanishListing(post).hasSpanishArticle && post.data.lang !== 'es' ? ' (en inglés)' : ''}
 										</h3>
 										<p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
 											{spanishListing(post).description}
