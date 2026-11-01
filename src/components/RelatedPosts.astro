@@ -1,13 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { articleRoute } from '../utils/i18n.mjs';
 
 interface Props {
   currentId: string;
   tags?: string[];
+  locale?: 'en' | 'es';
 }
 
-const { currentId, tags = [] } = Astro.props;
+const { currentId, tags = [], locale = 'en' } = Astro.props;
 const tagSet = new Set(tags);
 const candidates = (await getCollection('blog'))
   .filter((post) => !post.id.startsWith('es/') && post.id !== currentId)
@@ -26,12 +28,12 @@ const hasRelated = suggestions.some((item) => item.sharedTags > 0);
 {suggestions.length > 0 && (
   <aside aria-labelledby="related-articles-heading" class="mt-10">
     <h2 id="related-articles-heading" class="text-2xl font-bold mb-5 text-slate-900 dark:text-slate-50">
-      {hasRelated ? 'Related articles' : 'More from the blog'}
+      {hasRelated ? (locale === 'es' ? 'Artículos relacionados' : 'Related articles') : (locale === 'es' ? 'Más artículos' : 'More from the blog')}
     </h2>
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {suggestions.map(({ post }) => (
         <li class="min-w-0">
-          <a href={`/${post.id}/`} class="glass-card group block h-full rounded-xl p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+          <a href={articleRoute(post.id, locale)} class="glass-card group block h-full rounded-xl p-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
             <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-indigo-600 dark:group-hover:text-indigo-300">
               {post.data.title}
             </h3>
