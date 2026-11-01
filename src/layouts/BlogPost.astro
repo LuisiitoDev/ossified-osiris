@@ -94,7 +94,7 @@ const isGitHubActionsHero = heroImage === '/img/GitHubActions/hero.svg';
 							
 							<span class="hidden sm:inline opacity-30 text-slate-400 dark:text-slate-600">&bull;</span>
 							
-							<VisitorCounter slug={postId ? `/${postId}/` : canonicalURL.pathname} increment={isArticle} />
+							<VisitorCounter slug={postId ? `/${postId}/` : (locale === 'es' ? '/about/' : canonicalURL.pathname)} increment={true} />
 						</div>
 						
 						<h1 id="article-title" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50 bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-900 dark:from-slate-50 dark:via-slate-100 dark:to-indigo-200 bg-clip-text text-transparent mb-2">
