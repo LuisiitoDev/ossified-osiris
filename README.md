@@ -218,7 +218,7 @@ You need Chrome installed. The workflow additionally verifies the Netlify commit
 
 **Interpretation:** Lighthouse is a lab measurement, not field Core Web Vitals. A passing accessibility score is not WCAG certification, and preview-only indexing directives (if present) can affect its SEO score. For production-level conclusions, also check the published site and real-user metrics.
 
-## English and Spanish (in progress)
+## English and Spanish
 
 **English remains the default.** Existing URLs such as `/about/`, `/mcp/`, and all historical article slugs remain unchanged. Spanish-language navigation uses `/es/`, `/es/about/`, `/es/search/`, and `/es/topics/<tag>/`.
 
@@ -230,6 +230,6 @@ To add a translated article:
 1. Create `src/content/blog/es/OriginalFileName.md`, preserving its images, links, publication date and tags. Set `lang: 'es'` and translate the title, description and prose without changing code or technical assertions.
 2. Add its slug to `translatedArticleSlugs` in `src/utils/i18n.mjs`. Add or update the Spanish listing metadata in `src/utils/spanishContent.mjs`.
 3. Verify `/original-slug/` and `/es/original-slug/` render with language-specific title, description, canonical URL and reciprocal `hreflang`, and that switching languages preserves the correct page.
-4. Run `node --test scripts/i18n.test.mjs`, `npm run build`, `node scripts/validate-internal-links.mjs` and `node scripts/a11y-smoke.mjs`.
+4. Run `node --test scripts/i18n.test.mjs scripts/i18nContent.test.mjs`, `npm run build`, `node scripts/check-i18n-output.mjs`, `node scripts/validate-internal-links.mjs` and `node scripts/a11y-smoke.mjs`.
 
-Locale selection uses ordinary crawlable links, without cookies, automatic redirects or machine translation. The English RSS feed remains restricted to original entries. Spanish search keeps its local/noindex behavior.
+Locale selection uses ordinary crawlable links, without cookies, automatic redirects or machine translation. The English RSS feed at `/rss.xml` contains only original English routes, while the Spanish feed at `/es/rss.xml` contains the ten translated articles. Both are linked contextually from the site. Spanish search retains local filtering and `noindex`.
