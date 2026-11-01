@@ -10,7 +10,7 @@ interface Props {
 const { currentId, tags = [] } = Astro.props;
 const tagSet = new Set(tags);
 const candidates = (await getCollection('blog'))
-  .filter((post) => post.id !== currentId)
+  .filter((post) => !post.id.startsWith('es/') && post.id !== currentId)
   .map((post) => ({
     post,
     sharedTags: post.data.tags.filter((tag) => tagSet.has(tag)).length,
