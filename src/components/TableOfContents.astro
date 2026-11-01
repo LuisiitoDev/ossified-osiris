@@ -8,15 +8,16 @@ interface Heading {
 }
 interface Props {
   headings?: Heading[];
+  locale?: 'en' | 'es';
 }
-const { headings = [] } = Astro.props;
+const { headings = [], locale = 'en' } = Astro.props;
 const items = getTocHeadings(headings);
 const visible = showTableOfContents(headings);
 ---
 
 {visible && (
-  <nav aria-label="Table of contents" class="mb-9 rounded-xl border border-indigo-500/15 bg-indigo-500/[0.035] dark:bg-indigo-400/[0.06] px-5 py-4">
-    <h2 class="text-base font-bold text-slate-900 dark:text-slate-50 mb-3">On this page</h2>
+  <nav aria-label={locale === 'es' ? 'Tabla de contenidos' : 'Table of contents'} class="mb-9 rounded-xl border border-indigo-500/15 bg-indigo-500/[0.035] dark:bg-indigo-400/[0.06] px-5 py-4">
+    <h2 class="text-base font-bold text-slate-900 dark:text-slate-50 mb-3">{locale === 'es' ? 'En esta página' : 'On this page'}</h2>
     <ol class="m-0 list-none p-0 space-y-2 text-sm leading-snug">
       {items.map((heading) => (
         <li class:list={['m-0', { 'pl-4': heading.depth === 3 }]}>
