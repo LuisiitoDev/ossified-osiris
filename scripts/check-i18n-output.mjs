@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const dist = join(root, 'dist');
 const base = 'https://luisiitodev.com';
 const html = (route) => {
-  const path = join(dist, route === '/' ? 'index.html' : route.slice(1), 'index.html');
+  const path = route === '/' ? join(dist, 'index.html') : join(dist, route.slice(1), 'index.html');
   assert.ok(existsSync(path), 'Missing generated route: ' + route);
   return readFileSync(path, 'utf8');
 };
