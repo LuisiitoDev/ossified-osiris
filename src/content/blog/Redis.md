@@ -1,63 +1,61 @@
 ---
 title: 'Redis.cs'
-description: 'Guía práctica de Azure Cache for Redis con C#: crea el recurso en Azure y aprende a leer y escribir datos desde una aplicación .NET.'
+description: 'A practical introduction to Azure Cache for Redis with C#: creating the Azure resource and reading or writing data from a .NET API.'
 pubDate: '2022-08-22'
 heroImage: '/img/Redis/Redis.png'
 tags: ['redis', 'azure', 'csharp', 'dotnet']
-lang: 'es'
+lang: 'en'
 ---
 
 <h2 align="center">
-    Azure Cache for Redis en C#
+    Azure Cache for Redis with C#
 </h2>
 
-Redis en un motor de base de datos en memoria, utilizado para alta disponibilidad de sistemas, significa "Remote Dicitionary Server".
+Redis is an in-memory data store commonly used for caching and other high-performance workloads. Its name originally comes from **Remote Dictionary Server**.
 
-### ¿Cómo funciona Redis?
+### How does Redis work?
 
-Redis está basado bajo la estructura de hash, en el cual se tiene una clave y un valor, adicionalmente Redis permite poder establecer tiempos de expiracion para nuestros datos.
+Redis is a key-value data store that supports several data structures and optional expiration times for entries. Applications can use these capabilities to cache frequently accessed information.
 
-### Tipos de Datos
+### Data types
 
-* Strings: Cadenas de texto.
-* Lits: Colecciones o lista de cadena de texto.
-* Sets: Lista de cadenas de texto sin un orden.
-* Sorted Sets: Lista de cadenas de texto ordenadas.
+* **Strings:** text or binary values.
+* **Lists:** ordered collections of values.
+* **Sets:** unordered collections of unique values.
+* **Sorted sets:** ordered collections of unique values associated with scores.
 
+## A small Redis example with C# and Azure Cache for Redis
 
-## Veamos a realizar un pequeño ejemplo de Redis en C# con Azure Cache for Redis
+First, let's create the resource in [Azure Portal](https://portal.azure.com).
 
-Lo primero que debemos realizar es crear nuestro recurso en Azure: portal.azure.com
-
-1. Buscamos el recurso Azure Cache for Redis.
+1. Find the **Azure Cache for Redis** resource.
     \
-    ![result](/img/Redis/resource.png)
+    ![Azure Cache for Redis resource](/img/Redis/resource.png)
 
-2. Lo siguiente que debemos hacer es crear el recurso, como en el siguiente ejemplo:
+2. Create the resource as shown in the example:
     \
-    ![result](/img/Redis/createResource.png)
+    ![Create an Azure Cache for Redis resource](/img/Redis/createResource.png)
 
-    1. En este paso lo que se debe hacer primero es seleccionar nuestra suscripción de Azure.
-    2. Debemos seleccionar nustro grupo de recursos o crear nuevo según sea el caso.
-    3. Debemos dar el nombre a nuestro cache, el nombre debe ser único en todo el écosistema Azure.
-    4. Debemos seleccionar la ubicación del recurso, en este caso seleccionamos EastUS
-    5. Por último seleccionamos el tipo de cache o pricing tier.
+    1. Select your Azure subscription.
+    2. Select an existing resource group or create a new one.
+    3. Choose a globally unique cache name.
+    4. Choose the location. This historical example uses East US.
+    5. Select the cache pricing tier.
 
-3. Una vez creado nuestro redis cache en Azure, debemos obtener la cadena de conexión, como se muestra en la siguiente imagen:
+3. Once the Redis cache has been created, retrieve its connection string:
     \
-    ![result](/img/Redis/conexion.png)
+    ![Redis connection settings](/img/Redis/conexion.png)
 
     \
-    ![result](/img/Redis/cadena.png)
+    ![Redis connection string](/img/Redis/cadena.png)
 
+After provisioning the Azure resource, we'll create a C# solution, using a Web API in this example.
 
-Una vez creado y configurado nuestro recurso en Azure, crearemos nuestra solución en C#, en este caso crearemos un WebApi.
+Start by installing [StackExchange.Redis](https://www.nuget.org/packages/StackExchange.Redis/), the widely used .NET Redis client maintained by the Stack Exchange ecosystem, also known for [Stack Overflow](https://stackoverflow.com/).
 
-Primeramente debemos agregar un nuget muy popular, y recomendado por Microsoft, el cual se llama: [StackExchange.Redis](https://www.nuget.org/packages/StackExchange.Redis/), como dato curioso, el nuget fue creado por [Stack Exchange](https://stackexchange.com/) creadores de [StackOverFlow](https://stackoverflow.com/)
+## Using Redis from the API
 
-## Veamos como usarlo
-
-Creamos una clase para construir la conexion con Redis
+First, create a class that establishes the Redis connection:
 
 ```cs
 namespace RedisEjemplo.Cache
@@ -81,8 +79,7 @@ namespace RedisEjemplo.Cache
 }
 ```
 
-Luego creamos una clase para realizar las diversas operaciones sobre Redis
-
+Then create a class that provides operations against Redis:
 
 ```cs
 namespace RedisEjemplo.Cache
@@ -114,8 +111,7 @@ namespace RedisEjemplo.Cache
 }
 ```
 
-
-Finalmente creamos nuestro controller con nuestros endpoints:
+Finally, define a controller that exposes the API endpoints:
 
 ```cs
 namespace RedisEjemplo.Controllers
@@ -161,25 +157,24 @@ namespace RedisEjemplo.Controllers
 }
 ```
 
-Veamos la salida de nuestro ejemplo:
+Let's see the result of our example.
 
-POST: Crear un valor en Redis
+**POST:** create a value in Redis.
 \
-![result](/img/Redis/post.png)
+![POST request storing a Redis value](/img/Redis/post.png)
 
-GET: Obtenemos el valor almacenado
+**GET:** retrieve the cached value.
 \
-![result](/img/Redis/get.png)
+![GET request reading a Redis value](/img/Redis/get.png)
 
-Como adicional, nos conectaremos a nuestra base de datos Azure Cache for Redis desde un cliente en Visual Studio Code. El cliente utilizado fue el siguiente: [Redis client for VSCode](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-redis-client)
+We can also connect to Azure Cache for Redis using an extension in Visual Studio Code. The client used in this example was [Redis client for VSCode](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-redis-client).
 
-\
+![Redis client in Visual Studio Code](/img/Redis/cliente.png)
 
-![result](/img/Redis/cliente.png)
+Enjoy! 😄
 
+### References
+* [Bigeek: Redis para principiantes](https://blog.bi-geek.com/redis-para-principiantes/) (June 28, 2018)
+* [Microsoft: About Azure Cache for Redis](https://docs.microsoft.com/es-es/azure/azure-cache-for-redis/cache-overview) (July 28, 2022)
 
-Enjoy it! 😄
-
-### References:
-* [Bigeek](https://blog.bi-geek.com/redis-para-principiantes/) (28 Junio, 2018) Redis para principiantes
-* [Microsoft](https://docs.microsoft.com/es-es/azure/azure-cache-for-redis/cache-overview) (28 Julio, 2022) Acerca de Azure Cache for Redis
+> **Historical tutorial:** These screenshots and resource-creation steps reflect Azure as it appeared in 2022. Verify current service availability, recommended Azure caching services, pricing and security configuration before following the steps in a new project.

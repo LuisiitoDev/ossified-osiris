@@ -2,6 +2,8 @@
 // ProfileShareCard.astro
 // Interactive component to display and share a digital profile card suitable for stories.
 import { imageCdnUrl, responsiveImageAttributes } from '../utils/imageCdn.mjs';
+import { localeFromPath } from '../utils/i18n.mjs';
+const locale = localeFromPath(Astro.url.pathname);
 
 // The share preview is just 64px. The generated 1080x1920 card draws the
 // avatar at 360x360, so request a 480px rendition for the canvas instead.
@@ -25,7 +27,7 @@ const shareCanvasAvatar = imageCdnUrl('/luis-sandoval.png', { width: 480 });
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5 text-white animate-bounce">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186l5.302-3.181m0 0a2.25 2.25 0 103.935-2.186 2.25 2.25 0 00-3.935 2.186zm0-2.186N2.25 2.25 0 002.25 12c0 .412.11.8.3-1.137l5.302 3.181m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0 2.186l5.302 3.18" />
 			</svg>
-			Share my profile
+			{locale === 'es' ? 'Compartir mi perfil' : 'Share my profile'}
 		</span>
 	</button>
 </div>
@@ -43,10 +45,10 @@ const shareCanvasAvatar = imageCdnUrl('/luis-sandoval.png', { width: 480 });
 		
 		<div class="flex flex-col items-center">
 			<h3 class="text-lg sm:text-xl font-extrabold tracking-tight mb-1 text-slate-900 dark:text-slate-50 text-center font-title">
-				Your Profile Story Card
+				{locale === 'es' ? 'Tarjeta para compartir mi perfil' : 'Your Profile Story Card'}
 			</h3>
 			<p class="text-[11px] text-slate-500 dark:text-slate-400 text-center mb-5 max-w-[260px] leading-relaxed">
-				Share this card on your WhatsApp, Instagram, or Facebook stories!
+				{locale === 'es' ? 'Compartí esta tarjeta en tus historias de WhatsApp, Instagram o Facebook.' : 'Share this card on your WhatsApp, Instagram, or Facebook stories!'}
 			</p>
 			
 			<!-- Card Visual Preview (Story Aspect 9:16 representation) -->
@@ -80,7 +82,7 @@ const shareCanvasAvatar = imageCdnUrl('/luis-sandoval.png', { width: 480 });
 						
 						<div class="w-full h-[1px] bg-white/10 mb-2"></div>
 						
-						<p class="text-[8px] uppercase tracking-wider font-extrabold text-slate-500 mb-1.5 font-title">Core Expertise</p>
+						<p class="text-[8px] uppercase tracking-wider font-extrabold text-slate-500 mb-1.5 font-title">{locale === 'es' ? 'Áreas de experiencia' : 'Core Expertise'}</p>
 						<div class="flex flex-wrap justify-center gap-1 px-1">
 							{['.NET', 'Azure', 'AI Solutions', 'DevOps'].map(skill => (
 								<span class="text-[8px] font-bold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-indigo-300 font-sans">

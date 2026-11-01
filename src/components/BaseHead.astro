@@ -2,6 +2,7 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
+import { localizedAlternates } from '../utils/i18n.mjs';
 
 interface Props {
 	title: string;
@@ -19,6 +20,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = '/blog-placeholder-1.jpg', pubDate, updatedDate, isArticle = false, noindex = false, lang = 'en', tags = [] } = Astro.props;
 const fullImageUrl = new URL(image, Astro.site).toString();
+const alternates = localizedAlternates(Astro.url.pathname);
 
 // Generate dynamic JSON-LD structured data for search crawlers
 const schema = isArticle 
@@ -87,7 +89,16 @@ const schema = isArticle
 <!-- SEO / Indexing meta tags -->
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
 <link rel="sitemap" href="/sitemap-index.xml" />
-<link rel="alternate" type="application/rss+xml" title="LuisiitoDev RSS feed" href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title={lang === "es" ? "LuisiitoDev: RSS en español" : "LuisiitoDev RSS feed"} href={lang === "es" ? "/es/rss.xml" : "/rss.xml"} />
+
+<!-- Reciprocal language equivalents only when content exists in both languages. -->
+{alternates && (
+  <>
+    <link rel="alternate" hreflang="en" href={new URL(alternates.en, Astro.site).toString()} />
+    <link rel="alternate" hreflang="es" href={new URL(alternates.es, Astro.site).toString()} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternates.en, Astro.site).toString()} />
+  </>
+)}
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />

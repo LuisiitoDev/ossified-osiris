@@ -1,16 +1,19 @@
 ---
+import { localeFromPath, localeRoute, labels } from '../utils/i18n.mjs';
 const today = new Date();
+const locale = localeFromPath(Astro.url.pathname);
+const t = labels[locale];
 ---
 
 <footer class="mt-20 py-10 px-6 border-t border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
 	<div class="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
 		<div class="text-sm text-slate-500 dark:text-slate-400">
-			&copy; {today.getFullYear()} <span class="font-semibold text-slate-800 dark:text-slate-200">@LuisiitoDev</span>. All rights reserved.
+			&copy; {today.getFullYear()} <span class="font-semibold text-slate-800 dark:text-slate-200">@LuisiitoDev</span>.{" "}{t.rights}
 		</div>
 		
 		<div class="flex items-center justify-center gap-4 text-sm">
-			<a href="/search/" class="text-slate-600 dark:text-slate-300 hover:underline">Search articles</a>
-			<a href="/rss.xml" class="text-slate-600 dark:text-slate-300 hover:underline" title="Subscribe to RSS">RSS feed</a>
+			<a href={localeRoute("/search", locale)} class="text-slate-600 dark:text-slate-300 hover:underline">{t.search}</a>
+			<a href={locale === "es" ? "/es/rss.xml" : "/rss.xml"} class="text-slate-600 dark:text-slate-300 hover:underline" title={locale === "es" ? "Suscribirse al RSS" : "Subscribe to RSS"}>{t.rss}</a>
 		</div>
 		<div class="social-links flex items-center justify-center gap-3">
 			<!-- LinkedIn -->

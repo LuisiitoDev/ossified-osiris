@@ -217,3 +217,19 @@ node scripts/summarizeLighthouse.mjs
 You need Chrome installed. The workflow additionally verifies the Netlify commit status first. The repository contains no Lighthouse reporting credentials.
 
 **Interpretation:** Lighthouse is a lab measurement, not field Core Web Vitals. A passing accessibility score is not WCAG certification, and preview-only indexing directives (if present) can affect its SEO score. For production-level conclusions, also check the published site and real-user metrics.
+
+## English and Spanish
+
+**English remains the default.** Existing URLs such as `/about/`, `/mcp/`, and all historical article slugs remain unchanged. Spanish-language navigation uses `/es/`, `/es/about/`, `/es/search/`, and `/es/topics/<tag>/`.
+
+The EN/ES toggle is present in the shared header. Where a genuine translated page exists, it links directly to the equivalent. On original-only English articles, the ES control points to the Spanish landing page instead of publishing misleading duplicate English text under a Spanish URL.
+
+Both landing pages include article cards. Spanish listing titles/descriptions are editorial summaries; any future article without a complete Spanish translation is clearly labeled **(en inglés)** and links to the original source. Full translations are stored as versioned Markdown at `src/content/blog/es/<OriginalFileName>.md`; published translated articles have `/es/<original-slug>/` URLs and independent canonical and reciprocal `hreflang` tags. All ten existing articles now have complete Spanish editions: GH-200, AZ-204, HelloFriend, C# extension methods, MCP, DACPAC/SQL DevOps, Platzi Conf, React/Docker/GitHub Actions, Azure AD B2C and Redis. The legacy Redis URL now serves English and its previous Spanish text remains versioned at /es/redis/. English is the default for all published article URLs. Translations are reviewed against the original structure and code fences. Future articles must be translated before claiming that the *updated* archive is fully bilingual.
+
+To add a translated article:
+1. Create `src/content/blog/es/OriginalFileName.md`, preserving its images, links, publication date and tags. Set `lang: 'es'` and translate the title, description and prose without changing code or technical assertions.
+2. Add its slug to `translatedArticleSlugs` in `src/utils/i18n.mjs`. Add or update the Spanish listing metadata in `src/utils/spanishContent.mjs`.
+3. Verify `/original-slug/` and `/es/original-slug/` render with language-specific title, description, canonical URL and reciprocal `hreflang`, and that switching languages preserves the correct page.
+4. Run `node --test scripts/i18n.test.mjs scripts/i18nContent.test.mjs`, `npm run build`, `node scripts/check-i18n-output.mjs`, `node scripts/validate-internal-links.mjs` and `node scripts/a11y-smoke.mjs`.
+
+Locale selection uses ordinary crawlable links, without cookies, automatic redirects or machine translation. The English RSS feed at `/rss.xml` contains only original English routes, while the Spanish feed at `/es/rss.xml` contains the ten translated articles. Both are linked contextually from the site. Spanish search retains local filtering and `noindex`.
