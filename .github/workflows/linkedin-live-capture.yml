@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - '.github/workflows/linkedin-live-capture.yml'
+      - 'scripts/capture-linkedin-live-once.mjs'
 permissions:
   contents: read
 
