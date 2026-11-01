@@ -1,6 +1,6 @@
 // Keep the English routes stable. Spanish pages use /es/.
 // Only list a post when an actual translated Markdown page has been published.
-export const translatedArticleSlugs = new Set(['howigotmygithubactionscert', 'howigetmyazurecert', 'hellofriend', 'extendedmethods']);
+export const translatedArticleSlugs = new Set(['howigotmygithubactionscert', 'howigetmyazurecert', 'hellofriend', 'extendedmethods', 'mcp', 'sql-database-devops']);
 
 export function localeFromPath(pathname) {
   return /^\/es(?:\/|$)/.test(pathname || '') ? 'es' : 'en';
