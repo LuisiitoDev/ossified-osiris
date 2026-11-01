@@ -1,4 +1,6 @@
 ---
+import { localeFromPath } from '../utils/i18n.mjs';
+const locale = localeFromPath(Astro.url.pathname);
 interface Props {
 	slug: string;
 	increment?: boolean;
@@ -7,12 +9,12 @@ interface Props {
 const { slug, increment = false } = Astro.props;
 ---
 
-<span class="visitor-counter inline-flex items-center gap-1.5 text-slate-500 dark:text-slate-400 py-1 px-2.5 rounded-full bg-slate-100/60 dark:bg-slate-800/40 border border-slate-200/40 dark:border-slate-700/30 text-xs" data-slug={slug} data-increment={increment ? "true" : "false"}>
+<span class="visitor-counter inline-flex items-center gap-1.5 text-slate-500 dark:text-slate-400 py-1 px-2.5 rounded-full bg-slate-100/60 dark:bg-slate-800/40 border border-slate-200/40 dark:border-slate-700/30 text-xs" data-slug={slug} data-increment={increment ? "true" : "false"} data-locale={locale}>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 opacity-80">
 		<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 		<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 	</svg>
-	<span class="counter-value font-medium font-sans" aria-live="polite">— views</span>
+	<span class="counter-value font-medium font-sans" aria-live="polite">{locale === 'es' ? '— visitas' : '— views'}</span>
 </span>
 
 <script>
@@ -23,6 +25,8 @@ const { slug, increment = false } = Astro.props;
 			const slug = counter.getAttribute('data-slug');
 			const shouldIncrement = counter.getAttribute('data-increment') === 'true';
 			const valueEl = counter.querySelector('.counter-value');
+            const locale = counter.getAttribute('data-locale') === 'es' ? 'es' : 'en';
+            const suffix = locale === 'es' ? 'visitas' : 'views';
 			if (!slug || !valueEl) continue;
 
 			// Sanitize slug to make it a valid counterapi key: [a-zA-Z0-9-_]{3,64}
@@ -58,12 +62,12 @@ const { slug, increment = false } = Astro.props;
 				if (!Number.isSafeInteger(data?.count) || data.count < 0) {
 					throw new Error('Counter returned an invalid count');
 				}
-				valueEl.textContent = `${data.count.toLocaleString()} views`;
+				valueEl.textContent = `${data.count.toLocaleString(locale === 'es' ? 'es-CR' : 'en-US')} ${suffix}`;
 				counter.setAttribute('data-loaded', 'true');
 			} catch (error) {
 				console.warn('Visit count is unavailable', error);
 				// Never present local values or API failures as a real global count.
-				valueEl.textContent = '— views';
+				valueEl.textContent = `— ${suffix}`;
 			} finally {
 				counter.removeAttribute('data-loading');
 			}
