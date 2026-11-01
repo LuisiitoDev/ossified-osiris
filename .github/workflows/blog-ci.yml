@@ -29,7 +29,7 @@ jobs:
           test -f dist/es/rss.xml
           test -f dist/sitemap-index.xml
           test -f dist/search/index.html
-          if grep -q 'https://luisiitodev.com/search/' dist/sitemap-*.xml; then
+          if grep -E -q 'https://luisiitodev.com/(es/)?search/' dist/sitemap-*.xml; then
             echo 'Internal search should not be in the sitemap'
             exit 1
           fi
