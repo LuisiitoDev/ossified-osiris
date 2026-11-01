@@ -8,7 +8,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import VisitorCounter from '../components/VisitorCounter.astro';
 import { responsiveImageAttributes } from '../utils/imageCdn.mjs';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('blog')).filter(post => !post.id.startsWith('es/')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
