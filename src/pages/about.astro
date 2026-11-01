@@ -1,6 +1,12 @@
 ---
 import Layout from '../layouts/BlogPost.astro';
 import ProfileShareCard from '../components/ProfileShareCard.astro';
+import { responsiveImageAttributes } from '../utils/imageCdn.mjs';
+
+const avatarImage = responsiveImageAttributes('/luis-sandoval.png', {
+  widths: [160, 320],
+  sizes: '(max-width: 640px) 144px, 160px',
+});
 
 const priorityCertifications = [
   {
@@ -65,8 +71,11 @@ const fundamentalsCertifications = [
 		<div class="relative h-36 w-36 sm:h-40 sm:w-40">
 			<div class="h-full w-full overflow-hidden rounded-full border border-slate-200/30 shadow-md dark:border-slate-800/30">
 				<img
-					src="/luis-sandoval.png"
+					{...avatarImage}
 					alt="Luis Sandoval"
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
 					width="160"
 					height="160"
 					class="about-avatar-image block h-full w-full select-none object-cover"
