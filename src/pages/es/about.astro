@@ -1,0 +1,462 @@
+---
+import Layout from '../../layouts/BlogPost.astro';
+import ProfileShareCard from '../../components/ProfileShareCard.astro';
+import { responsiveImageAttributes } from '../../utils/imageCdn.mjs';
+
+const avatarImage = responsiveImageAttributes('/luis-sandoval.png', {
+  widths: [160, 320],
+  sizes: '(max-width: 640px) 144px, 160px',
+});
+
+const priorityCertifications = [
+  {
+    title: 'Azure AI Engineer Associate',
+    issuer: 'Microsoft',
+    focus: 'Soluciones de IA, servicios de Azure AI e ingeniería de IA aplicada',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/azure-ai-engineer?tab=credentials-tab',
+    linkLabel: 'Ver credencial',
+  },
+  {
+    title: 'SQL AI Developer Associate',
+    issuer: 'Microsoft',
+    focus: 'SQL, ingeniería de datos y soluciones de bases de datos con IA',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/developing-ai-enabled-database-solutions?tab=credentials-tab',
+    linkLabel: 'Ver credencial',
+  },
+  {
+    title: 'GitHub Actions',
+    issuer: 'GitHub',
+    focus: 'Automatización de workflows, CI/CD y pipelines de entrega seguros',
+    badge: '/github-actions-cert.svg',
+    url: 'https://learn.microsoft.com/en-us/users/luissandoval-5751/credentials/certification/github-actions?tab=credentials-tab',
+    linkLabel: 'Ver credencial',
+  },
+  {
+    title: 'Azure Developer Associate',
+    issuer: 'Microsoft',
+    focus: 'Diseño, desarrollo y operación de aplicaciones en Azure',
+    badge: '/microsoft-certified-associate.png',
+    url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/88BA7F0EF27D4087?sharingId=4112CC77E15438D0',
+    linkLabel: 'Ver credencial',
+  },
+];
+
+const fundamentalsCertifications = [
+  {
+    title: 'Azure AI Fundamentals',
+    issuer: 'Microsoft',
+    badge: '/microsoft-certified-fundamentals.png',
+    url: 'https://www.credly.com/badges/ab6af0d2-9756-425c-b6fc-2589d9a0240f',
+  },
+  {
+    title: 'Azure Fundamentals',
+    issuer: 'Microsoft',
+    badge: '/microsoft-certified-fundamentals.png',
+    url: 'https://learn.microsoft.com/api/credentials/share/en-us/LUISSANDOVAL-5751/6E18A2881646833A?sharingId=4112CC77E15438D0',
+  },
+];
+---
+
+<Layout
+	isArticle={false}
+	title="Sobre mí"
+	description="Conocé a Luis Sandoval: desarrollo de software, .NET, Azure, DevOps, inteligencia artificial y certificaciones profesionales."
+	pubDate={new Date('December 05 2024')}
+	updatedDate={new Date('October 31 2026')}
+	lang="es"
+>
+	<!-- Profile image with a small Copilot proficiency badge; no overlay/card obscures the portrait. -->
+	<div class="mb-7 -mt-4 flex flex-col items-center justify-center">
+		<div class="relative h-36 w-36 sm:h-40 sm:w-40">
+			<div class="h-full w-full overflow-hidden rounded-full border border-slate-200/30 shadow-md dark:border-slate-800/30">
+				<img
+					{...avatarImage}
+					alt="Luis Sandoval"
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
+					width="160"
+					height="160"
+					class="about-avatar-image block h-full w-full select-none object-cover"
+				/>
+			</div>
+			<img
+				src="/copilot-pro-proficient.webp"
+				alt=""
+				aria-hidden="true"
+				width="48"
+				height="48"
+				class="about-copilot-badge pointer-events-none absolute -bottom-1 -right-1 h-11 w-11 object-contain drop-shadow-md sm:h-12 sm:w-12"
+				loading="eager"
+				decoding="async"
+			/>
+		</div>
+
+		<p class="mt-4 mb-0 inline-flex items-center gap-2 rounded-full border border-violet-400/20 bg-violet-500/5 px-3 py-1.5 text-xs font-medium leading-normal text-slate-600 dark:border-violet-400/25 dark:bg-violet-400/10 dark:text-slate-300">
+			<span>GitHub Copilot</span>
+			<span aria-hidden="true" class="h-1 w-1 rounded-full bg-violet-400"></span>
+			<span class="font-bold text-violet-700 dark:text-violet-300">Proficient</span>
+		</p>
+	</div>
+
+	<!-- Interactive Profile Share Card Modal -->
+	<ProfileShareCard />
+
+	<!-- Introduction Section -->
+	<div class="intro-section mb-10 text-slate-700 dark:text-slate-300">
+		<p class="text-lg leading-relaxed font-normal">
+			👋 ¡Hola! Soy <strong>Luis Sandoval</strong>, ingeniero de software de Cartago, Costa Rica. Trabajo con <strong>.NET, Azure, arquitectura en la nube, DevOps e ingeniería de IA</strong>. Me gusta combinar diseño de software, automatización y solución de problemas reales. En este blog comparto lo que construyo, lo que aprendo y las decisiones de ingeniería detrás de cada proyecto.
+		</p>
+	</div>
+
+	<!-- Experience Section -->
+	<div class="experience-section mb-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 013.75 18.4V14.15m16.5 0c0-1.24-.75-2.317-1.874-2.775m1.874 2.775V8.25c0-.621-.504-1.125-1.125-1.125H16.5m-12.75 8c0-1.24.75-2.317 1.874-2.775m-1.874 2.775V8.25c0-.621.504-1.125 1.125-1.125H7.5m9 0V5.25c0-.621-.504-1.125-1.125-1.125H8.625c-.621 0-1.125.504-1.125 1.125v3M12 9v3m0 0H9.75M12 12h2.25" />
+			</svg>
+			Experiencia profesional
+		</h2>
+		
+		<div class="space-y-8 relative before:absolute before:inset-y-1 before:left-3.5 before:w-[2px] before:bg-slate-200 dark:before:bg-slate-800">
+			<!-- Experience Item 1 -->
+			<div class="relative pl-10 group">
+				<div class="absolute left-1.5 top-1.5 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-4 border-indigo-500 group-hover:scale-110 transition-transform duration-200"></div>
+				<div class="bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-800/40 rounded-xl p-5 hover:border-indigo-500/20 transition-all duration-200">
+					<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+						<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 m-0">Gestión en Tecnología e Información GTI</h3>
+						<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">San José, Costa Rica</span>
+					</div>
+					
+					<div class="space-y-3.5 mt-4">
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/20 pl-3">
+							<div>
+								<h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">Senior Software Engineer</h4>
+								<span class="text-xs text-slate-400">May. 2022 - Present</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 m-0">Mid Software Engineer</h4>
+								<span class="text-xs text-slate-400">Feb. 2021 - May. 2022</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm font-medium text-slate-600 dark:text-slate-400 m-0">Junior Software Engineer</h4>
+								<span class="text-xs text-slate-400">Dec. 2018 - Feb. 2021</span>
+							</div>
+						</div>
+						<div class="flex items-start justify-between border-l-2 border-indigo-500/10 pl-3">
+							<div>
+								<h4 class="text-sm text-slate-600 dark:text-slate-400 m-0">Software Engineer Internship</h4>
+								<span class="text-xs text-slate-400">Sept. 2018 - Dec. 2018</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Experience Item 2 -->
+			<div class="relative pl-10 group">
+				<div class="absolute left-1.5 top-1.5 w-5 h-5 rounded-full bg-white dark:bg-slate-900 border-4 border-purple-500 group-hover:scale-110 transition-transform duration-200"></div>
+				<div class="bg-slate-50/50 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-800/40 rounded-xl p-5 hover:border-purple-500/20 transition-all duration-200">
+					<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+						<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 m-0">Fiserv</h3>
+						<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">Cartago, Costa Rica</span>
+					</div>
+					<div class="mt-4 border-l-2 border-purple-500/20 pl-3">
+						<h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200 m-0">Software Development Engineer</h4>
+						<span class="text-xs text-slate-400">Nov. 2020 - Feb. 2021</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Skills Section -->
+	<div class="skills-section mb-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.982-11.825H18l1 6.175L10.018 3H9l-1 6.175h-.018z" />
+			</svg>
+			Habilidades y tecnologías
+		</h2>
+		
+		<div class="flex flex-wrap gap-2.5">
+			{[
+				'C#', '.NET', '.NET MAUI', 'Python', 'Azure', 'AI & Azure OpenAI', 
+				'Model Context Protocol (MCP)', 'SQL Server & Database DevOps', 
+				'DevOps & CI/CD', 'Clean Architecture & SOLID'
+			].map((skill) => (
+				<span class="px-3.5 py-1.5 rounded-xl font-medium text-xs sm:text-sm bg-indigo-50 dark:bg-slate-800/60 text-indigo-600 dark:text-indigo-400 border border-indigo-100/50 dark:border-slate-700/50 hover:bg-indigo-100/40 dark:hover:bg-slate-700/60 transition-all duration-200 hover:-translate-y-0.5 select-none cursor-default shadow-sm shadow-indigo-100/5 dark:shadow-none">
+					{skill}
+				</span>
+			))}
+		</div>
+	</div>
+
+	<!-- Certification highlights -->
+	<section class="certifications-section mb-12" aria-labelledby="certifications-heading">
+		<h2 id="certifications-heading" class="text-2xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0110 21a3.745 3.745 0 01-3.296-1.593 3.746 3.746 0 01-3.296-3.296A3.746 3.746 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0114 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 3.296A3.746 3.746 0 0121 12z" />
+			</svg>
+			Certificaciones y credenciales
+		</h2>
+		<p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-6">
+			Credenciales en ingeniería en la nube, inteligencia artificial y entrega de software. Destaco las que mejor representan mi enfoque técnico.
+		</p>
+
+		<!-- Expert certification spotlight: official badge + personal Microsoft Learn credential. -->
+		<a
+			href="https://learn.microsoft.com/es-mx/users/luissandoval-5751/credentials/certification/devops-engineer?tab=credentials-tab"
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="Microsoft Certified: DevOps Engineer Expert — Ver credencial"
+			class="group relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-indigo-400/50 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-500 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:flex-row sm:items-center sm:p-8 dark:border-indigo-400/35 dark:from-indigo-950/60 dark:via-slate-900 dark:to-purple-950/40"
+		>
+			<img
+				src="https://learn.microsoft.com/en-us/media/learn/certification/badges/microsoft-certified-expert-badge.svg"
+				alt="Microsoft Certified Expert badge"
+				width="96"
+				height="96"
+				loading="lazy"
+				decoding="async"
+				class="h-24 w-24 shrink-0 object-contain transition-transform duration-200 group-hover:scale-105"
+			/>
+			<div class="min-w-0 flex-1">
+				<p class="mb-2 text-xs font-bold uppercase tracking-widest text-indigo-700 dark:text-indigo-300">Certificación de nivel Expert · Microsoft</p>
+				<h3 class="mb-2 text-xl font-extrabold text-slate-900 sm:text-2xl dark:text-slate-50">DevOps Engineer Expert</h3>
+				<p class="mb-3 text-sm text-slate-600 dark:text-slate-300">
+					Obtenida en octubre de 2026 (AZ-400). Estrategia DevOps, CI/CD, infraestructura como código, seguridad y observabilidad.
+				</p>
+				<span class="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-700 underline underline-offset-4 dark:text-indigo-300">
+					Ver credencial <span aria-hidden="true">↗</span>
+				</span>
+			</div>
+		</a>
+
+		<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">Certificaciones destacadas</h3>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+			{priorityCertifications.map((cert) => (
+				<a
+					href={cert.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={`${cert.title} — ${cert.linkLabel}`}
+					class="group flex items-start gap-4 rounded-xl border border-indigo-500/20 dark:border-indigo-400/20 bg-indigo-500/[0.035] dark:bg-indigo-400/[0.045] p-4 sm:p-5 hover:border-indigo-500/50 hover:shadow-md transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+				>
+					<img src={cert.badge} width="64" height="64" alt="" loading="lazy" decoding="async" class="w-16 h-16 object-contain shrink-0" />
+					<div class="min-w-0">
+						<span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">{cert.issuer}</span>
+						<h4 class="text-base font-bold text-slate-900 dark:text-slate-50 mt-1 mb-1">{cert.title}</h4>
+						<p class="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300 mb-2">{cert.focus}</p>
+						<span class="text-xs font-semibold underline underline-offset-4 text-indigo-700 dark:text-indigo-300">{cert.linkLabel}</span>
+					</div>
+				</a>
+			))}
+		</div>
+
+		<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-4">Otras certificaciones</h3>
+		<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+			{fundamentalsCertifications.map((cert) => (
+				<li>
+					<a href={cert.url} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-700 p-3 hover:border-indigo-500/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+						<img src={cert.badge} width="48" height="48" alt="" loading="lazy" decoding="async" class="h-12 w-12 object-contain shrink-0" />
+						<span class="flex-1 min-w-0">
+							<span class="block text-sm font-bold text-slate-800 dark:text-slate-100">{cert.title}</span>
+							<span class="block text-xs text-slate-500 dark:text-slate-400">{cert.issuer} · Verify credential</span>
+						</span>
+					</a>
+				</li>
+			))}
+		</ul>
+
+
+	</section>
+
+	<!-- GitHub Spotlight Section -->
+	<div class="github-section mb-6">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+			</svg>
+			Proyectos destacados de código abierto
+		</h2>
+		
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			{[
+				{
+					name: 'DiscoverCostaRica',
+					desc: 'An API offering detailed geographical and cultural data about Costa Rica, including traditional dishes, beaches, national parks, and festivals.',
+					lang: 'C#',
+					url: 'https://github.com/LuisiitoDev/DiscoverCostaRica',
+					color: 'border-emerald-500/20 dark:border-emerald-800/20 hover:border-emerald-500'
+				},
+				{
+					name: 'DevOpsAssistant',
+					desc: 'A C# helper utility designed to automate, streamline, and inspect DevOps CI/CD pipeline runs and configurations.',
+					lang: 'C#',
+					url: 'https://github.com/LuisiitoDev/DevOpsAssistant',
+					color: 'border-indigo-500/20 dark:border-indigo-800/20 hover:border-indigo-500'
+				},
+				{
+					name: 'SQLDataBaseDevOps',
+					desc: 'A comprehensive repository showcasing automated database DevOps pipelines, migrations, and schema deployments for SQL Server.',
+					lang: 'TSQL / SQL',
+					url: 'https://github.com/LuisiitoDev/SQLDataBaseDevOps',
+					color: 'border-amber-500/20 dark:border-amber-800/20 hover:border-amber-500'
+				},
+				{
+					name: 'dotNetMCPServer',
+					desc: 'A Model Context Protocol (MCP) server implementation built in C#/.NET, allowing local tools and databases to integrate with LLMs.',
+					lang: 'C# / .NET',
+					url: 'https://github.com/LuisiitoDev/dotNetMCPServer',
+					color: 'border-violet-500/20 dark:border-violet-800/20 hover:border-violet-500'
+				}
+			].map((project) => (
+				<a 
+					href={project.url} 
+					target="_blank" 
+					rel="noopener noreferrer"
+					class={`group flex flex-col justify-between p-5 rounded-xl border ${project.color} bg-slate-50/40 dark:bg-slate-900/20 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none`}
+				>
+					<div>
+						<div class="flex items-center justify-between mb-2">
+							<span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{project.name}</span>
+							<svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" class="text-slate-400 dark:text-slate-600 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
+								<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+							</svg>
+						</div>
+						<p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 m-0 leading-relaxed">
+							{project.desc}
+						</p>
+					</div>
+					<div class="flex items-center gap-1.5 mt-4 text-xs font-semibold text-slate-400">
+						<span class="w-2.5 h-2.5 rounded-full bg-slate-400 dark:bg-slate-600"></span>
+						<span>{project.lang}</span>
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<!-- Información de contacto Section -->
+	<div class="contact-section mb-6 mt-12">
+		<h2 class="text-2xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-slate-50 flex items-center gap-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-2">
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-500">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+			</svg>
+			Información de contacto
+		</h2>
+		
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			<!-- LinkedIn -->
+			<a 
+				href="https://www.linkedin.com/in/luisiitodev/" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-3.5 sm:gap-5 p-4 sm:p-5 rounded-xl border border-blue-500/20 dark:border-blue-800/20 bg-blue-500/5 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+						<path d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.58c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.59c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.69h-3.56V9h3.42v1.56h.05c.48-.91 1.64-1.85 3.37-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-blue-500/70">Connect with me</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors leading-snug">
+						Perfil de LinkedIn
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">linkedin.com/in/luisiitodev</p>
+				</div>
+			</a>
+
+			<!-- GitHub -->
+			<a 
+				href="https://github.com/LuisiitoDev" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-3.5 sm:gap-5 p-4 sm:p-5 rounded-xl border border-slate-500/20 dark:border-slate-800/20 bg-slate-500/5 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-slate-900/10 dark:bg-white/10 text-slate-900 dark:text-slate-100 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg viewBox="0 0 16 16" width="24" height="24" fill="currentColor">
+						<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-slate-500/70">View my code</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors leading-snug">
+						Perfil de GitHub
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">github.com/LuisiitoDev</p>
+				</div>
+			</a>
+
+			<!-- X (Twitter) -->
+			<a 
+				href="https://x.com/luisiitodev" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="group flex items-center gap-3.5 sm:gap-5 p-4 sm:p-5 rounded-xl border border-slate-500/20 dark:border-slate-800/20 bg-slate-50/40 dark:bg-slate-900/10 hover:shadow-md hover:-translate-y-1 transition-all duration-200 text-decoration-none"
+			>
+				<div class="w-12 h-12 rounded-xl bg-slate-900/10 dark:bg-white/10 text-slate-900 dark:text-slate-100 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+						<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+					</svg>
+				</div>
+				<div class="flex-1">
+					<span class="text-xs font-semibold uppercase tracking-wider text-slate-500/70">Follow me</span>
+					<h3 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 group-hover:text-slate-900 dark:group-hover:text-slate-50 transition-colors leading-snug">
+						X / Twitter
+					</h3>
+					<p class="text-xs text-slate-400 mt-1 select-none font-medium">x.com/luisiitodev</p>
+				</div>
+			</a>
+		</div>
+	</div>
+</Layout>
+
+<!-- About profile images are inside the shared article .prose container.
+     Its default article-image rules (height:auto, margin:2rem, object-fit:contain)
+     must NOT apply to the circular avatar or the floating badge. -->
+<style is:global>
+  #article-content img.about-avatar-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  #article-content img.about-copilot-badge {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: contain;
+  }
+
+  @media (min-width: 640px) {
+    #article-content img.about-copilot-badge {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+</style>
